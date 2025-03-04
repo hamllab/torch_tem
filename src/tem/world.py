@@ -29,6 +29,7 @@ def generate_env(spec, n_obs, observations):
         actions = []
         for src in loc["actions"]:
             t = np.zeros(env["n_locations"], dtype=int)
+            t = [int(i) for i in t]
             if src["dest"] != "null":
                 t[src["dest"]] = 1
                 p = 1 / len(dest)
