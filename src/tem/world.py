@@ -14,6 +14,44 @@ from scipy.sparse.csgraph import shortest_path
 # Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
 
 
+def convert_spec(spec):
+    """Convert a short specification to an env."""
+    env = {
+        "n_locations": spec["n_locations"],
+        "n_observations": spec["n_observations"],
+        "n_actions": spec["n_actions"],
+        "adjacency": spec["adjacency"],
+        "locations": [],
+    }
+    observations = np.arange(env["n_observations"])
+    np.random.shuffle(observations)
+
+    for i, loc in enumerate(spec["locations"]):
+        dest = [a["dest"] for a in loc["actions"] if a["dest"] != "null"]
+        actions = []
+        for src in loc["actions"]:
+            t = np.zeros(env["n_locations"], dtype=int)
+            if src["dest"] != "null":
+                t[src["dest"]] = 1
+                p = 1 / len(dest)
+            else:
+                p = 0
+            action = {"id": src["id"], "transition": t, "probability": p}
+            actions.append(action)
+        d = {
+            "id": loc["id"],
+            "observation": int(observations[i]),
+            "x": loc["x"],
+            "y": loc["y"],
+            "in_locations": dest,
+            "in_degree": len(dest),
+            "out_locations": dest,
+            "out_degree": len(dest),
+            "actions": actions,
+        }
+        env["locations"].append(d)
+
+
 class World:
     def __init__(
         self, env, randomise_observations=False, randomise_policy=False, shiny=None
