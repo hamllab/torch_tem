@@ -14,17 +14,15 @@ from scipy.sparse.csgraph import shortest_path
 # Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
 
 
-def convert_spec(spec):
-    """Convert a short specification to an env."""
+def generate_env(spec, n_obs, observations):
+    """Generate an environment from a specification."""
     env = {
         "n_locations": spec["n_locations"],
-        "n_observations": spec["n_observations"],
+        "n_observations": n_obs,
         "n_actions": spec["n_actions"],
         "adjacency": spec["adjacency"],
         "locations": [],
     }
-    observations = np.arange(env["n_observations"])
-    np.random.shuffle(observations)
 
     for i, loc in enumerate(spec["locations"]):
         dest = [a["dest"] for a in loc["actions"] if a["dest"] != "null"]
@@ -50,6 +48,7 @@ def convert_spec(spec):
             "actions": actions,
         }
         env["locations"].append(d)
+    return env
 
 
 class World:
