@@ -5,6 +5,7 @@ dependencies = [
     "numpy",
     "scipy",
     "torch",
+    "tensorflow",
     "matplotlib"
 ]
 
