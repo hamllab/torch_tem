@@ -14,10 +14,7 @@ import time
 import glob, os, shutil
 import importlib.util
 # Own module imports
-import world
-import utils
-import parameters
-import model as model    
+from tem import world, utils, parameters, model
 
 # Set random seeds for reproducibility
 np.random.seed(0)
@@ -94,7 +91,7 @@ logger = utils.make_logger(run_path)
 adam = torch.optim.Adam(tem.parameters(), lr = params['lr_max'])
 
 # Make set of environments: one for each batch, randomly choosing to use shiny objects or not
-environments = [world.World(graph, randomise_observations=True, shiny=(params['shiny'] if np.random.rand() < params['shiny_rate'] else None)) for graph in np.random.choice(envs,params['batch_size'])]
+environments = [world.World(graph, randomise_observations=True, shiny=(params['shiny'] if np.random.rand() < params['shiny_rate'] else None)) for graph in np.random.choice(envs, params['batch_size'])]
 # Initialise whether a state has been visited for each world
 visited = [[False for _ in range(env.n_locations)] for env in environments]
 # And make a single walk for each environment, where walk lengths can be any between the min and max length to de-sychronise world switches

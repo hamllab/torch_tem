@@ -14,11 +14,11 @@ Release v1.0.0: Fully functional pytorch model, without any extensions
 # Standard modules
 import numpy as np
 import torch
-import pdb
 import copy
 from scipy.stats import truncnorm
 # Custom modules
-import utils
+from tem import utils
+
 
 class Model(torch.nn.Module):
     def __init__(self, params):
@@ -265,7 +265,7 @@ class Model(torch.nn.Module):
         for f in range(self.hyper['n_f']):
             if self.hyper['use_p_inf']:
                 # Then get full gaussian distribution of inferred abstract location by calculating precision weighted mean
-                mu, sigma = utils.inv_var_weight([mu_g_path[f], mu_g_mem[f]],[sigma_g_path[f], sigma_g_mem[f]])
+                mu, sigma = utils.inv_var_weight([mu_g_path[f], mu_g_mem[f]], [sigma_g_path[f], sigma_g_mem[f]])
             else:
                 # Or simply completely ignore the inference memory here, to test if things are working
                 mu, sigma = mu_g_path[f], sigma_g_path[f]
@@ -285,7 +285,7 @@ class Model(torch.nn.Module):
             # Inverse variance weighting is associative, so I can just do additional inverse variance weighting to the previously obtained mu and sigma - but only for object vector cell modules!
             for f in range(module_start, self.hyper['n_f']):
                 # Add inferred abstract location from shiny objects to previously obtained position, only for environments with shiny objects
-                mu, sigma = utils.inv_var_weight([mu_g[f][shiny_envs,:], mu_g_shiny[f - module_start]], [sigma_g[f][shiny_envs,:], sigma_g_shiny[f - module_start]])                
+                mu, sigma = utils.inv_var_weight([mu_g[f][shiny_envs, :], mu_g_shiny[f - module_start]], [sigma_g[f][shiny_envs, :], sigma_g_shiny[f - module_start]])
                 # In order to update only the environments with shiny objects, without in-place value assignment, construct a mask of shiny environments
                 mask = torch.zeros_like(mu_g[f], dtype=torch.bool)
                 mask[shiny_envs,:] = True

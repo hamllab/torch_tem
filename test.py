@@ -13,9 +13,7 @@ import glob
 import matplotlib.pyplot as plt
 import importlib.util
 # Own module imports. Note how model module is not imported, since we'll used the model from the training run
-import world
-import analyse
-import plot
+from tem import world, analyse, plot
 
 # Set random seeds for reproducibility
 np.random.seed(0)
@@ -91,9 +89,10 @@ envs_to_avg = shiny_envs if shiny_envs[env_to_plot] else [not shiny_env for shin
 # Plot results of agent comparison and zero-shot inference analysis
 filt_size = 41
 plt.figure()
-plt.plot(analyse.smooth(np.mean(np.array([env for env_i, env in enumerate(correct_model) if envs_to_avg[env_i]]),0)[1:], filt_size), label='tem')
-plt.plot(analyse.smooth(np.mean(np.array([env for env_i, env in enumerate(correct_node) if envs_to_avg[env_i]]),0)[1:], filt_size), label='node')
-plt.plot(analyse.smooth(np.mean(np.array([env for env_i, env in enumerate(correct_edge) if envs_to_avg[env_i]]),0)[1:], filt_size), label='edge')
+plt.plot(
+    analyse.smooth(np.mean(np.array([env for env_i, env in enumerate(correct_model) if envs_to_avg[env_i]]), 0)[1:], filt_size), label='tem')
+plt.plot(analyse.smooth(np.mean(np.array([env for env_i, env in enumerate(correct_node) if envs_to_avg[env_i]]), 0)[1:], filt_size), label='node')
+plt.plot(analyse.smooth(np.mean(np.array([env for env_i, env in enumerate(correct_edge) if envs_to_avg[env_i]]), 0)[1:], filt_size), label='edge')
 plt.ylim(0, 1)
 plt.legend()
 plt.title('Zero-shot inference: ' + str(np.mean([np.mean(env) for env_i, env in enumerate(zero_shot) if envs_to_avg[env_i]]) * 100) + '%')
@@ -112,7 +111,7 @@ plot.plot_map(environments[env_to_plot], np.array(from_acc[env_to_plot]), ax)
 ax.set_title('Accuracy from location')
 
 # Plot occupation per location, then add walks on top
-ax = plot.plot_map(environments[env_to_plot], np.array(occupation[env_to_plot])/sum(occupation[env_to_plot])*environments[env_to_plot].n_locations, 
+ax = plot.plot_map(environments[env_to_plot], np.array(occupation[env_to_plot]) / sum(occupation[env_to_plot]) * environments[env_to_plot].n_locations,
                    min_val=0, max_val=2, ax=None, shape='square', radius=1/np.sqrt(environments[env_to_plot].n_locations))
-ax = plot.plot_walk(environments[env_to_plot], walks[env_to_plot], ax=ax, n_steps=max(1, int(len(walks[env_to_plot])/500)))
+ax = plot.plot_walk(environments[env_to_plot], walks[env_to_plot], ax=ax, n_steps=max(1, int(len(walks[env_to_plot]) / 500)))
 plt.title('Walk and average occupation')
