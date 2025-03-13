@@ -24,9 +24,9 @@ torch.manual_seed(0)
 load_existing_model = False;
 if load_existing_model:
     # Choose which trained model to load
-    date = '2020-10-06' # 2020-07-05 run 0 for successful node agent
-    run = '2'
-    i_start = 40
+    date = '2025-03-05' # 2020-07-05 run 0 for successful node agent
+    run = '1'
+    i_start = 9999
     
     # Set all paths from existing run 
     run_path, train_path, model_path, save_path, script_path, envs_path = utils.set_directories(date, run)
@@ -37,9 +37,9 @@ if load_existing_model:
     model_spec.loader.exec_module(model)
     
     # Load the parameters of the model
-    params = torch.load(model_path + '/params_' + str(i_start) + '.pt')
+    params = torch.load(model_path + '/params_' + str(i_start) + '.pt', weights_only=False)
     # But certain parameters (like total nr of training iterations) may need to be copied from the current set of parameters
-    new_params = {'train_it':40000}
+    new_params = {'train_it':20000}
     # Update those in params
     for key in new_params:
         params[key] = new_params[key]
@@ -52,7 +52,8 @@ if load_existing_model:
     tem.load_state_dict(model_weights)
     
     # Make list of all the environments that this model was trained on
-    envs = list(glob.iglob(envs_path + '/*'))
+    # envs = list(glob.iglob(envs_path + '/*'))
+    envs = ['./envs/2x3_env2.json']
     
     # And increase starting iteration by 1, since the loaded model already carried out the current starting iteration
     i_start = i_start + 1
@@ -63,10 +64,12 @@ else:
     # Create directories for storing all information about the current run
     run_path, train_path, model_path, save_path, script_path, envs_path = utils.make_directories()
     # Save all python files in current directory to script directory
-    files = glob.iglob(os.path.join('.', '*.py'))
+    script_files = glob.iglob(os.path.join('.', '*.py'))
+    package_files = glob.iglob(os.path.join('src/tem', '*.py'))
+    files = list(script_files) + list(package_files)
     for file in files:
         if os.path.isfile(file):
-            shutil.copy2(file, os.path.join(script_path, file))        
+            shutil.copy2(file, os.path.join(str(script_path), file))
             
     # Initalise hyperparameters for model
     params = parameters.parameters()
@@ -77,7 +80,7 @@ else:
     tem = model.Model(params)
     
     # Create list of environments that we will sample from during training to provide TEM with trajectory input
-    envs = ['./envs/5x5.json']
+    envs = ['./envs/2x3_env1.json']
     # Save all environment files that are being used in training in the script directory
     for file in set(envs):
         shutil.copy2(file, os.path.join(envs_path, os.path.basename(file)))    
