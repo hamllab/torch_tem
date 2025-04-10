@@ -6,6 +6,8 @@ dependencies = [
     "scipy",
     "torch",
     "tensorflow",
+    "polars",
+    "seaborn",
     "matplotlib"
 ]
 
