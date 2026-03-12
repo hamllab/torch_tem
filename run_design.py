@@ -14,16 +14,20 @@ from tem import world, utils, parameters, model
 np.random.seed(0)
 torch.manual_seed(0)
 
-design_dir = Path("~/VSCode/operators_model/jupyter")
-design_files = [design_dir / "graph1.csv", design_dir / "graph2.csv"]
-train_iter = 50
-
+subject = "001"
+train_iter = 1
+log_interval = 1
+n_trials = None
+date = '2026-03-12'
+latest_run = '11'
 load_existing_model = True
+
+design_dir = Path("~/VSCode/operators/design/simulation").expanduser()
+design_files = [design_dir / f"sub-{subject}_graph-{graph}_design.csv" for graph in [1, 2]]
 if load_existing_model:
     # Choose which trained model to load
-    date = '2026-03-10'  # 2020-07-05 run 0 for successful node agent
-    run = '30'
-    i_start = 50
+    run = latest_run
+    i_start = train_iter
 
     # Set all paths from existing run
     run_path, train_path, model_path, save_path, script_path, envs_path = utils.set_directories(date, run)
@@ -81,6 +85,9 @@ else:
     shutil.copy2(env_file, os.path.join(envs_path, os.path.basename(env_file)))
 
     design = pl.read_csv(design_files[0])
+
+if n_trials is not None:
+    design = design[:n_trials]
 
 # Create a tensor board to stay updated on training progress. Start tensorboard with tensorboard --logdir=runs
 writer = SummaryWriter(train_path)
@@ -198,7 +205,7 @@ for i in range(i_start, train_iter + 1):
     acc_p, acc_g, acc_gt = [a * 100 for a in (acc_p, acc_g, acc_gt)]
 
     # Log progress
-    if i % 5 == 0:
+    if i % log_interval == 0:
         # Write series of messages to logger from this backprop iteration
         logger.info('Finished backprop iter {:d} in {:.2f} seconds.'.format(i, time.time() - start_time))
         logger.info(
@@ -223,11 +230,6 @@ for i in range(i_start, train_iter + 1):
         writer.add_scalar('Accuracies/p', acc_p, i)
         writer.add_scalar('Accuracies/g', acc_g, i)
         writer.add_scalar('Accuracies/gt', acc_gt, i)
-
-    # Also store the internal state (all learnable parameters) and the hyperparameters periodically
-    if i % 100 == 0:
-        torch.save(tem.state_dict(), model_path + '/tem_' + str(i) + '.pt')
-        torch.save(tem.hyper, model_path + '/params_' + str(i) + '.pt')
 
 # Save the final state of the model after training has finished
 torch.save(tem.state_dict(), model_path + '/tem_' + str(i) + '.pt')
