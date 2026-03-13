@@ -168,13 +168,17 @@ for i, walk in enumerate(walks):
     acc_p, acc_g, acc_gt = np.mean([[np.mean(a) for a in step.correct()] for step in forward], axis=0)
     acc_p, acc_g, acc_gt = [a * 100 for a in (acc_p, acc_g, acc_gt)]
 
+    if isinstance(plot_loss, np.int64):
+        plot_loss = None
+
     # Log progress
     if i % log_interval == 0:
         # Write series of messages to logger from this backprop iteration
         logger.info('Finished backprop iter {:d} in {:.2f} seconds.'.format(i, time.time() - start_time))
-        logger.info(
-            'Loss: {:.2f}. <p_g> {:.2f} <p_x> {:.2f} <x_gen> {:.2f} <x_g> {:.2f} <x_p> {:.2f} <g> {:.2f} <reg_g> {:.2f} <reg_p> {:.2f}'.format(
-                loss.detach().numpy(), *plot_loss))
+        if plot_loss is not None:
+            logger.info(
+                'Loss: {:.2f}. <p_g> {:.2f} <p_x> {:.2f} <x_gen> {:.2f} <x_g> {:.2f} <x_p> {:.2f} <g> {:.2f} <reg_g> {:.2f} <reg_p> {:.2f}'.format(
+                    loss.detach().numpy(), *plot_loss))
         logger.info('Accuracy: <p> {:.2f}% <g> {:.2f}% <gt> {:.2f}%'.format(acc_p, acc_g, acc_gt))
         logger.info('Parameters: <max_hebb> {:.2f} <eta> {:.2f} <lambda> {:.2f} <p2g_scale_offset> {:.2f}'.format(
             np.max(np.abs(prev_iter[0].M[0].numpy())), tem.hyper['eta'], tem.hyper['lambda'],
@@ -183,17 +187,18 @@ for i, walk in enumerate(walks):
         logger.info(' ')
         # Also write progress to tensorboard, and all loss components. Order: [L_p_g, L_p_x, L_x_gen, L_x_g, L_x_p, L_g, L_reg_g, L_reg_p]
         writer.add_scalar('Losses/Total', loss.detach().numpy(), i)
-        writer.add_scalar('Losses/p_g', plot_loss[0], i)
-        writer.add_scalar('Losses/p_x', plot_loss[1], i)
-        writer.add_scalar('Losses/x_gen', plot_loss[2], i)
-        writer.add_scalar('Losses/x_g', plot_loss[3], i)
-        writer.add_scalar('Losses/x_p', plot_loss[4], i)
-        writer.add_scalar('Losses/g', plot_loss[5], i)
-        writer.add_scalar('Losses/reg_g', plot_loss[6], i)
-        writer.add_scalar('Losses/reg_p', plot_loss[7], i)
-        writer.add_scalar('Accuracies/p', acc_p, i)
-        writer.add_scalar('Accuracies/g', acc_g, i)
-        writer.add_scalar('Accuracies/gt', acc_gt, i)
+        if plot_loss is not None:
+            writer.add_scalar('Losses/p_g', plot_loss[0], i)
+            writer.add_scalar('Losses/p_x', plot_loss[1], i)
+            writer.add_scalar('Losses/x_gen', plot_loss[2], i)
+            writer.add_scalar('Losses/x_g', plot_loss[3], i)
+            writer.add_scalar('Losses/x_p', plot_loss[4], i)
+            writer.add_scalar('Losses/g', plot_loss[5], i)
+            writer.add_scalar('Losses/reg_g', plot_loss[6], i)
+            writer.add_scalar('Losses/reg_p', plot_loss[7], i)
+            writer.add_scalar('Accuracies/p', acc_p, i)
+            writer.add_scalar('Accuracies/g', acc_g, i)
+            writer.add_scalar('Accuracies/gt', acc_gt, i)
 
 # Save the final state of the model after training has finished
 torch.save(tem.state_dict(), model_path + '/tem_' + str(i) + '.pt')
