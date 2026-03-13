@@ -10,6 +10,10 @@ import numpy as np
 import torch
 import copy
 from scipy.sparse.csgraph import shortest_path
+from tem import model, parameters
+import polars as pl
+from pathlib import Path
+
 
 # Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
 def design_walks(design, env, actions):
@@ -56,6 +60,72 @@ def design_walks(design, env, actions):
             steps[i_step][1] = torch.stack(step[1], dim=0)
         walks.append(steps)
     return walks
+
+
+def learn_walks(walks, env, params):
+    """Learn a series of walks through an environment."""
+    visited = [[False for _ in range(env.n_locations)]]
+    tem_model = model.Model(params)
+    adam = torch.optim.Adam(tem_model.parameters(), lr=params['lr_max'])
+    prev_iter = None
+    for i, walk in enumerate(walks):
+        # Get updated parameters for this backprop iteration
+        (
+            eta_new, lambda_new, p2g_scale_offset, lr, walk_length_center, loss_weights
+        ) = parameters.parameter_iteration(i, params)
+        # Update eta and lambda
+        tem_model.hyper['eta'] = eta_new
+        tem_model.hyper['lambda'] = lambda_new
+        # Update scaling of offset for variance of inferred grounded position
+        tem_model.hyper['p2g_scale_offset'] = p2g_scale_offset
+        # Update learning rate (the neater torch-way of doing this would be a scheduler, but this is quick and easy)
+        for param_group in adam.param_groups:
+            param_group['lr'] = lr
+
+        # Forward-pass this walk through the network
+        forward = tem_model(walk, prev_iter)
+
+        # Accumulate loss from forward pass
+        loss = torch.tensor(0.0, requires_grad=True)
+        # Collect all losses
+        for step in forward:
+            # Make list of losses included in this step
+            step_loss = []
+            # Only include loss for locations that have been visited before
+            for env_i, env_visited in enumerate(visited):
+                if env_visited[step.g[env_i]['id']]:
+                    step_loss.append(loss_weights * torch.stack([l[env_i] for l in step.L]))
+                else:
+                    env_visited[step.g[env_i]['id']] = True
+            # Stack losses in this step along first dimension, then average across that dimension to get mean loss for this step
+            step_loss = torch.tensor(0) if not step_loss else torch.mean(torch.stack(step_loss, dim=0), dim=0)
+            # And sum all components, then add them to total loss of this step
+            loss = loss + torch.sum(step_loss)
+
+        # Reset gradients
+        adam.zero_grad()
+        # Do backward pass to calculate gradients with respect to total loss of this chunk
+        loss.backward(retain_graph=True)
+        # Then do optimiser step to update parameters of model
+        adam.step()
+        # Update the previous iteration for the next chunk with the final step of this chunk, removing all operation history
+        prev_iter = [forward[-1].detach()]
+    return tem_model
+
+
+def learn_design(params, env_files, design_files, out_dir):
+    """Perform learning of multiple designs."""
+    designs = [pl.read_csv(file) for file in design_files]
+    out_dir = Path(out_dir)
+    tem_model = None
+    for i, design in enumerate(designs):
+        env = World(env_files[i], randomise_observations=True, shiny=None)
+        actions = {"south": 1, "east": 2, "north": 3, "west": 4}
+        walks = design_walks(design, env, actions)
+        tem_model = learn_walks(walks, env, params)
+        torch.save(tem_model.state_dict(), out_dir / f"tem_design-{i}.pt")
+        torch.save(tem_model.hyper, out_dir / f"params_design-{i}.pt")
+    return tem_model
 
 
 def generate_env(spec, n_obs, observations):
