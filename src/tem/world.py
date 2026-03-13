@@ -12,6 +12,50 @@ import copy
 from scipy.sparse.csgraph import shortest_path
 
 # Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
+def design_walks(design, env, actions):
+    """Create walks from a learning phase design."""
+    walks = []
+    nodes = [f"node_{n}" for n in range(1, 7)]
+    for row in design.iter_rows(named=True):
+        steps = []
+        if row["trial_type"] == "integration":
+            # start node (only applies in two-step trials)
+            start_ind = nodes.index(row["start_node"])
+            start_obs = env.get_observation(env.locations[start_ind])
+            steps.append(
+                [
+                    [{"id": start_ind, "shiny": None}],
+                    [start_obs],
+                    [actions[row["move_direction"]]],
+                ]
+            )
+
+        # cue node
+        cue_ind = nodes.index(row["cue_node"])
+        cue_obs = env.get_observation(env.locations[cue_ind])
+        steps.append(
+            [
+                [{"id": cue_ind, "shiny": None}],
+                [cue_obs],
+                [actions[row["direction"]]],
+            ]
+        )
+
+        # target node
+        target_ind = nodes.index(row["target_node"])
+        target_obs = env.get_observation(env.locations[target_ind])
+        steps.append(
+            [
+                [{"id": target_ind, "shiny": None}],
+                [target_obs],
+                [0],
+            ]
+        )
+
+        for i_step, step in enumerate(steps):
+            steps[i_step][1] = torch.stack(step[1], dim=0)
+        walks.append(steps)
+    return walks
 
 
 def generate_env(spec, n_obs, observations):
