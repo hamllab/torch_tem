@@ -14,12 +14,12 @@ from tem import world, utils, parameters, model
 np.random.seed(0)
 torch.manual_seed(0)
 
-subject = "001"
-train_iter = 1
+subject = "002"
+train_iter = 10
 log_interval = 1
 n_trials = None
 date = '2026-03-12'
-latest_run = '11'
+latest_run = '39'
 load_existing_model = True
 
 design_dir = Path("~/VSCode/operators/design/simulation").expanduser()
@@ -27,7 +27,8 @@ design_files = [design_dir / f"sub-{subject}_graph-{graph}_design.csv" for graph
 if load_existing_model:
     # Choose which trained model to load
     run = latest_run
-    i_start = train_iter
+    n_initial = pl.read_csv(design_files[0]).shape[0]
+    i_start = n_initial - 1
 
     # Set all paths from existing run
     run_path, train_path, model_path, save_path, script_path, envs_path = utils.set_directories(date, run)
@@ -59,6 +60,7 @@ if load_existing_model:
 else:
     # Start training from step 0
     i_start = 0
+    n_initial = 0
 
     # Create directories for storing all information about the current run
     run_path, train_path, model_path, save_path, script_path, envs_path = utils.make_directories()
@@ -111,7 +113,10 @@ visited = [[False for _ in range(env.n_locations)]]
 prev_iter = None
 # Train TEM on walks in different environment
 actions = {"south": 1, "east": 2, "north": 3, "west": 4}
-for i in range(i_start, train_iter + 1):
+walks = world.design_walks(design, env, actions)
+#for i in range(i_start, train_iter + 1):
+for i, walk in enumerate(walks):
+    i += n_initial
     # Get start time for function timing
     start_time = time.time()
     # Get updated parameters for this backprop iteration
@@ -126,49 +131,8 @@ for i in range(i_start, train_iter + 1):
     for param_group in adam.param_groups:
         param_group['lr'] = lr
 
-    # Make an empty chunk that will be fed to TEM in this backprop iteration
-    chunk = []
-    nodes = [f"node_{n}" for n in range(1, 7)]
-    for row in design.iter_rows(named=True):
-        if row["trial_type"] == "integration":
-            # start node (only applies in two-step trials)
-            start_ind = nodes.index(row["start_node"])
-            start_obs = env.get_observation(env.locations[start_ind])
-            chunk.append(
-                [
-                    [{"id": start_ind, "shiny": None}],
-                    [start_obs],
-                    [actions[row["move_direction"]]],
-                ]
-            )
-
-        # cue node
-        cue_ind = nodes.index(row["cue_node"])
-        cue_obs = env.get_observation(env.locations[cue_ind])
-        chunk.append(
-            [
-                [{"id": cue_ind, "shiny": None}],
-                [cue_obs],
-                [actions[row["direction"]]],
-            ]
-        )
-
-        # target node
-        target_ind = nodes.index(row["target_node"])
-        target_obs = env.get_observation(env.locations[target_ind])
-        chunk.append(
-            [
-                [{"id": target_ind, "shiny": None}],
-                [target_obs],
-                [0],
-            ]
-        )
-
-    for i_step, step in enumerate(chunk):
-        chunk[i_step][1] = torch.stack(step[1], dim=0)
-
     # Forward-pass this walk through the network
-    forward = tem(chunk, prev_iter)
+    forward = tem(walk, prev_iter)
 
     # Accumulate loss from forward pass
     loss = torch.tensor(0.0)
