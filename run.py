@@ -13,6 +13,7 @@ from torch.utils.tensorboard import SummaryWriter
 import time
 import glob, os, shutil
 import importlib.util
+from pathlib import Path
 # Own module imports
 from tem import world, utils, parameters, model
 
@@ -69,7 +70,8 @@ else:
     files = list(script_files) + list(package_files)
     for file in files:
         if os.path.isfile(file):
-            shutil.copy2(file, os.path.join(str(script_path), file))
+            file = Path(file)
+            shutil.copy2(file, os.path.join(str(script_path), file.name))
             
     # Initalise hyperparameters for model
     params = parameters.parameters()
@@ -150,7 +152,7 @@ for i in range(i_start, params['train_it']):
         chunk[i_step][1] = torch.stack(step[1], dim=0)    
         
     # Forward-pass this walk through the network
-    forward = tem(chunk, prev_iter)    
+    forward = tem(chunk, prev_iter)
     
     # Accumulate loss from forward pass
     loss = torch.tensor(0.0)
