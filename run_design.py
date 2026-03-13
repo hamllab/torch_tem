@@ -135,7 +135,7 @@ for i, walk in enumerate(walks):
     forward = tem(walk, prev_iter)
 
     # Accumulate loss from forward pass
-    loss = torch.tensor(0.0)
+    loss = torch.tensor(0.0, requires_grad=True)
     # Make vector for plotting losses
     plot_loss = 0
     # Collect all losses
