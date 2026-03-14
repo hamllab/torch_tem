@@ -13,6 +13,9 @@ from scipy.sparse.csgraph import shortest_path
 from tem import model, parameters
 import polars as pl
 from pathlib import Path
+import time
+from tem import utils
+from torch.utils.tensorboard import SummaryWriter
 
 
 # Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
@@ -62,17 +65,25 @@ def design_walks(design, env, actions):
     return walks
 
 
-def learn_walks(walks, env, params):
+def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
     """Learn a series of walks through an environment."""
     visited = [[False for _ in range(env.n_locations)]]
-    tem_model = model.Model(params)
-    adam = torch.optim.Adam(tem_model.parameters(), lr=params['lr_max'])
     prev_iter = None
-    for i, walk in enumerate(walks):
+
+    # Create a tensor board to stay updated on training progress. Start tensorboard with tensorboard --logdir=runs
+    str_dir = str(out_dir) + '/'
+    writer = SummaryWriter(str_dir)
+    # Create a logger to write log output to file
+    logger = utils.make_logger(str_dir)
+    log_interval = 1
+    for walk in walks:
+        i += 1
         # Get updated parameters for this backprop iteration
         (
             eta_new, lambda_new, p2g_scale_offset, lr, walk_length_center, loss_weights
         ) = parameters.parameter_iteration(i, params)
+        # Get start time for function timing
+        start_time = time.time()
         # Update eta and lambda
         tem_model.hyper['eta'] = eta_new
         tem_model.hyper['lambda'] = lambda_new
@@ -88,6 +99,7 @@ def learn_walks(walks, env, params):
         # Accumulate loss from forward pass
         loss = torch.tensor(0.0, requires_grad=True)
         # Collect all losses
+        plot_loss = 0
         for step in forward:
             # Make list of losses included in this step
             step_loss = []
@@ -99,6 +111,8 @@ def learn_walks(walks, env, params):
                     env_visited[step.g[env_i]['id']] = True
             # Stack losses in this step along first dimension, then average across that dimension to get mean loss for this step
             step_loss = torch.tensor(0) if not step_loss else torch.mean(torch.stack(step_loss, dim=0), dim=0)
+            # Save all separate components of loss for monitoring
+            plot_loss = plot_loss + step_loss.detach().numpy()
             # And sum all components, then add them to total loss of this step
             loss = loss + torch.sum(step_loss)
 
@@ -110,21 +124,61 @@ def learn_walks(walks, env, params):
         adam.step()
         # Update the previous iteration for the next chunk with the final step of this chunk, removing all operation history
         prev_iter = [forward[-1].detach()]
-    return tem_model
+
+        if isinstance(plot_loss, np.int64):
+            plot_loss = None
+
+        # Compute model accuracies
+        acc_p, acc_g, acc_gt = np.mean([[np.mean(a) for a in step.correct()] for step in forward], axis=0)
+        acc_p, acc_g, acc_gt = [a * 100 for a in (acc_p, acc_g, acc_gt)]
+
+        # Log progress
+        if i % log_interval == 0:
+            # Write series of messages to logger from this backprop iteration
+            logger.info('Finished backprop iter {:d} in {:.2f} seconds.'.format(i, time.time() - start_time))
+            if plot_loss is not None:
+                logger.info(
+                    'Loss: {:.2f}. <p_g> {:.2f} <p_x> {:.2f} <x_gen> {:.2f} <x_g> {:.2f} <x_p> {:.2f} <g> {:.2f} <reg_g> {:.2f} <reg_p> {:.2f}'.format(
+                        loss.detach().numpy(), *plot_loss))
+            logger.info('Accuracy: <p> {:.2f}% <g> {:.2f}% <gt> {:.2f}%'.format(acc_p, acc_g, acc_gt))
+            logger.info('Parameters: <max_hebb> {:.2f} <eta> {:.2f} <lambda> {:.2f} <p2g_scale_offset> {:.2f}'.format(
+                np.max(np.abs(prev_iter[0].M[0].numpy())), tem_model.hyper['eta'], tem_model.hyper['lambda'],
+                tem_model.hyper['p2g_scale_offset']))
+            logger.info('Weights:' + str([w for w in loss_weights.numpy()]))
+            logger.info(' ')
+            # Also write progress to tensorboard, and all loss components. Order: [L_p_g, L_p_x, L_x_gen, L_x_g, L_x_p, L_g, L_reg_g, L_reg_p]
+            writer.add_scalar('Losses/Total', loss.detach().numpy(), i)
+            if plot_loss is not None:
+                writer.add_scalar('Losses/p_g', plot_loss[0], i)
+                writer.add_scalar('Losses/p_x', plot_loss[1], i)
+                writer.add_scalar('Losses/x_gen', plot_loss[2], i)
+                writer.add_scalar('Losses/x_g', plot_loss[3], i)
+                writer.add_scalar('Losses/x_p', plot_loss[4], i)
+                writer.add_scalar('Losses/g', plot_loss[5], i)
+                writer.add_scalar('Losses/reg_g', plot_loss[6], i)
+                writer.add_scalar('Losses/reg_p', plot_loss[7], i)
+                writer.add_scalar('Accuracies/p', acc_p, i)
+                writer.add_scalar('Accuracies/g', acc_g, i)
+                writer.add_scalar('Accuracies/gt', acc_gt, i)
+    return tem_model, adam, params, i
 
 
-def learn_design(params, env_files, design_files, out_dir):
+def learn_design(env_files, design_files, out_dir, run):
     """Perform learning of multiple designs."""
     designs = [pl.read_csv(file) for file in design_files]
     out_dir = Path(out_dir)
-    tem_model = None
-    for i, design in enumerate(designs):
-        env = World(env_files[i], randomise_observations=True, shiny=None)
+    params = parameters.parameters()
+    tem_model = model.Model(params)
+    adam = torch.optim.Adam(tem_model.parameters(), lr=params['lr_max'])
+    i = 0  # iteration counter
+    for d, design in enumerate(designs):
+        env = World(env_files[d], randomise_observations=True, shiny=None)
         actions = {"south": 1, "east": 2, "north": 3, "west": 4}
         walks = design_walks(design, env, actions)
-        tem_model = learn_walks(walks, env, params)
-        torch.save(tem_model.state_dict(), out_dir / f"tem_design-{i}.pt")
-        torch.save(tem_model.hyper, out_dir / f"params_design-{i}.pt")
+        design_out_dir = out_dir / f"design-{d}"
+        tem_model, adam, params, i = learn_walks(walks, env, tem_model, adam, params, design_out_dir, i)
+        torch.save(tem_model.state_dict(), design_out_dir / f"run-{run}_design-{d}_tem.pt")
+        torch.save(tem_model.hyper, design_out_dir / f"run-{run}_design-{d}_params.pt")
     return tem_model
 
 
