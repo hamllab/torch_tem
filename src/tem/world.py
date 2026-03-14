@@ -163,7 +163,7 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
     return tem_model, adam, params, i
 
 
-def learn_design(env_files, design_files, out_dir, run):
+def learn_design(env_files, design_files, out_dir, subject, run):
     """Perform learning of multiple designs."""
     designs = [pl.read_csv(file) for file in design_files]
     out_dir = Path(out_dir)
@@ -177,8 +177,8 @@ def learn_design(env_files, design_files, out_dir, run):
         walks = design_walks(design, env, actions)
         design_out_dir = out_dir / f"design-{d}"
         tem_model, adam, params, i = learn_walks(walks, env, tem_model, adam, params, design_out_dir, i)
-        torch.save(tem_model.state_dict(), design_out_dir / f"run-{run}_design-{d}_tem.pt")
-        torch.save(tem_model.hyper, design_out_dir / f"run-{run}_design-{d}_params.pt")
+        torch.save(tem_model.state_dict(), design_out_dir / f"sub-{subject}_run-{run}_design-{d}_tem.pt")
+        torch.save(tem_model.hyper, design_out_dir / f"sub-{subject}_run-{run}_design-{d}_params.pt")
     return tem_model
 
 
