@@ -11,6 +11,7 @@ Release v1.0.0: Fully functional pytorch model, without any extensions
 
 @author: jacobb
 """
+
 # Standard modules
 import numpy as np
 import torch

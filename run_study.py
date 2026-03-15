@@ -11,7 +11,7 @@ np.random.seed(0)
 torch.manual_seed(0)
 
 design_dir = Path("~/VSCode/operators/design").expanduser()
-env_files = ['./envs/2x3_env1.json', './envs/2x3_env2.json']
+env_files = ["./envs/2x3_env1.json", "./envs/2x3_env2.json"]
 n_subj = 30
 n_runs = 10
 
@@ -31,14 +31,16 @@ for number in range(1, n_subj + 1):
     raw = pl.read_csv(raw_file)
     trials = raw.filter(
         ~(
-                pl.col("trial_type").str.starts_with('practice')
-                | pl.col("trial_type").str.contains("instruction")
-                | pl.col("trial_type").str.contains("feedback")
+            pl.col("trial_type").str.starts_with("practice")
+            | pl.col("trial_type").str.contains("instruction")
+            | pl.col("trial_type").str.contains("feedback")
         )
     )
     out_dir = study_dir / f"sub-{subject}"
     out_dir.mkdir()
-    design_files = [out_dir / f"sub-{subject}_graph-{graph}_design.csv" for graph in [1, 2]]
+    design_files = [
+        out_dir / f"sub-{subject}_graph-{graph}_design.csv" for graph in [1, 2]
+    ]
     trials.filter(graph="graph_1").write_csv(design_files[0])
     trials.filter(graph="graph_2").write_csv(design_files[1])
 
