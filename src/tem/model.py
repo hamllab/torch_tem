@@ -1219,3 +1219,44 @@ class Iteration:
         self.p_inf = [tensor.detach() for tensor in self.p_inf]
         # Return self after detaching everything
         return self
+
+
+def sigmoid(x, m, k, x0):
+    """Evaluate sigmoid function."""
+    return m / (1 + np.exp(-k * (x - x0)))
+
+
+def simulate_strength(graph, rng, L, m, k, x0):
+    """Simulate memory performance with an associative strength-based model."""
+    nodes = [f"node_{n}" for n in range(1, 7)]
+    learned = np.zeros((6, 6))
+    correct = np.zeros(graph.shape[0])
+    n = 0
+    for row in graph.iter_rows(named=True):
+        cue_ind = nodes.index(row["cue_node"])
+        target_ind = nodes.index(row["target_node"])
+
+        if row["trial_type"] == "prediction":
+            LX = learned[cue_ind, target_ind]
+            ret = rng.random() < sigmoid(LX, m, k, x0)
+            if ret:
+                correct[n] = True
+            else:
+                correct[n] = rng.random() < 0.5
+            learned[cue_ind, target_ind] += L
+
+        if row["trial_type"] == "integration":
+            start_ind = nodes.index(row["start_node"])
+            L1 = learned[start_ind, cue_ind]
+            L2 = learned[cue_ind, target_ind]
+            ret1 = rng.random() < sigmoid(L1, m, k, x0)
+            ret2 = rng.random() < sigmoid(L2, m, k, x0)
+            if ret1 and ret2:
+                correct[n] = True
+                learned[start_ind, cue_ind] += L
+                learned[cue_ind, target_ind] += L
+            else:
+                correct[n] = rng.random() < 0.5
+
+        n += 1
+    return correct, learned
