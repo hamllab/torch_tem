@@ -8,6 +8,7 @@ Created on Tue Feb 11 14:33:06 2020
 
 import json
 import numpy as np
+from numpy.dtypes import StringDType
 import torch
 import copy
 from scipy.sparse.csgraph import shortest_path
@@ -217,6 +218,78 @@ def learn_design(env_files, design_files, out_dir, subject, run):
             design_out_dir / f"sub-{subject}_run-{run}_design-{d}_params.pt",
         )
     return tem_model
+
+
+def generate_mckenzie(config_file):
+    """
+    Generate data in the McKenzie hierarchical schema paradigm.
+
+    Parameters
+    ----------
+    config_file : str, Path
+        Each element indicates one phase of training (e.g., AB, CD,
+        ABCD). Each element gives a list of trial types, indicating
+        the current contexts and object sets to be presented together.
+        Within each trial type, there is a list of contexts that gives
+        the object-reward pairings in that context in that set.
+    """
+    with open(config_file, "r") as f:
+        config = json.load(f)
+
+    df_list = []
+    for phase in config["phases"]:
+        n = phase["n"]
+        context = np.empty(n, dtype=StringDType)
+        object_set = np.empty(n, dtype=StringDType)
+        object1 = np.empty(n, dtype=StringDType)
+        object2 = np.empty(n, dtype=StringDType)
+        valence1 = np.empty(n, dtype=int)
+        valence2 = np.empty(n, dtype=int)
+        trial = np.arange(1, n + 1)
+        phase_contexts = list(phase["contexts"].keys())
+        for i in range(n):
+            # pick a context (not the same as the previous)
+            if n == 1:
+                context[i] = np.random.choice(phase_contexts)
+            else:
+                other_contexts = [p for p in phase_contexts if p != context[i - 1]]
+                context[i] = np.random.choice(other_contexts)
+
+            # pick an object set
+            valences = phase["contexts"][context[i]]
+            object_sets = list(valences.keys())
+            obj_set = np.random.choice(object_sets)
+            object_set[i] = obj_set
+            objects = list(valences[obj_set].keys())
+
+            # pick an ordering via coin flip
+            if np.random.rand() < 0.5:
+                object1[i] = objects[0]
+                object2[i] = objects[1]
+            else:
+                object1[i] = objects[1]
+                object2[i] = objects[0]
+
+            # determine valence
+            valence1[i] = valences[obj_set][object1[i]]
+            valence2[i] = valences[obj_set][object2[i]]
+
+        # create a data frame with all trial information
+        phase_df = pl.DataFrame(
+            {
+                "phase": phase["name"],
+                "trial": trial,
+                "context": context,
+                "object_set": object_set,
+                "object1": object1,
+                "object2": object2,
+                "valence1": valence1,
+                "valence2": valence2,
+            }
+        )
+        df_list.append(phase_df)
+    df = pl.concat(df_list)
+    return df
 
 
 def generate_env(spec, n_obs, observations):
