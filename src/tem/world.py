@@ -39,7 +39,7 @@ def generate_mckenzie(config_file):
         config = json.load(f)
 
     df_list = []
-    valence_labels = {-1: "no reward", 1: "reward"}
+    valence_labels = {-1: "N", 1: "R"}
     for phase in config["phases"]:
         n = phase["n"]
         context = np.empty(n, dtype=StringDType)
@@ -103,8 +103,8 @@ def design_mckenzie(config_file):
         "trial",
         "context",
         "object_set",
-        situation=pl.concat_str("context", "object1", "object2"),
-        action=np.array(["left", "right"])[index],
+        node=pl.concat_str("context", "object1", "object2"),
+        action=np.array(["L", "R"])[index],
         object=pl.concat_list("object1", "object2").list.get(index),
         valence=pl.concat_list("valence1", "valence2").list.get(index),
     )
@@ -112,12 +112,12 @@ def design_mckenzie(config_file):
         pl.concat(
             [
                 df_trial.with_columns(trial_type=pl.lit("choice")),
-                df_trial.with_columns(trial_type=pl.lit("feedback")),
+                df_trial.with_columns(
+                    trial_type=pl.lit("feedback"),
+                    node=pl.concat_str("context", "action", "object", "valence")
+                ),
             ]
         ).sort("phase", "trial", "context", "trial_type")
-        .with_columns(
-            node=pl.when(pl.col("trial_type") == "choice").then("situation").otherwise("valence")
-        )
     )
     return design
 
@@ -175,7 +175,7 @@ def walks_mckenzie(design, nodes, n_obs):
         obs = torch.zeros(n_obs).scatter_(0, torch.tensor(i), torch.ones(n_obs))
         observations[name] = obs.view(obs.shape[0])
 
-    actions = {"left": 0, "right": 1}
+    actions = {"L": 0, "R": 1}
     walks = []
     for row in design.iter_rows(named=True):
         if row["trial_type"] == "choice":
