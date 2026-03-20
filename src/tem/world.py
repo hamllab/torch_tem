@@ -234,7 +234,7 @@ def walks_mckenzie(design, nodes, n_obs):
             steps = []
             steps.append(
                 [
-                    [{"id": nodes.index(row["node"])}],
+                    [{"id": nodes.index(row["node"]), "shiny": None}],
                     [observations[row["node"]]],
                     [actions[row["action"]]],
                 ]
@@ -242,7 +242,7 @@ def walks_mckenzie(design, nodes, n_obs):
         elif row["trial_type"] == "feedback":
             steps.append(
                 [
-                    [{"id": nodes.index(row["node"])}],
+                    [{"id": nodes.index(row["node"]), "shiny": None}],
                     [observations[row["node"]]],
                     [0],
                 ]
