@@ -16,6 +16,7 @@ from tem import model, parameters
 import polars as pl
 from pathlib import Path
 import time
+from types import SimpleNamespace
 from tem import utils
 from torch.utils.tensorboard import SummaryWriter
 
@@ -220,6 +221,28 @@ def learn_design(env_files, design_files, out_dir, subject, run):
     return tem_model
 
 
+def learn_mckenzie(design, nodes, out_dir, run):
+    """Learn McKenzie design."""
+    out_dir = Path(out_dir)
+    params = parameters.parameters()
+    tem_model = model.Model(params)
+    adam = torch.optim.Adam(tem_model.parameters(), lr=params["lr_max"])
+    walks = walks_mckenzie(design, nodes, params["n_x"])
+    env = SimpleNamespace(n_locations=len(nodes))
+    tem_model, adam, params, i = learn_walks(
+        walks, env, tem_model, adam, params, out_dir, run
+    )
+    subject = "001"
+    torch.save(
+        tem_model.state_dict(),
+        out_dir / f"sub-{subject}_run-{run}_tem.pt",
+    )
+    torch.save(
+        tem_model.hyper,
+        out_dir / f"sub-{subject}_run-{run}_params.pt",
+    )
+
+
 def walks_mckenzie(design, nodes, n_obs):
     # create a one-hot tensor for each observation
     observations = {}
@@ -324,6 +347,33 @@ def generate_mckenzie(config_file):
         df_list.append(phase_df)
     df = pl.concat(df_list)
     return df
+
+
+def design_mckenzie(config_file):
+    df = generate_mckenzie(config_file)
+    index = np.random.choice([0, 1], size=df.shape[0])
+    df_trial = df.select(
+        "phase",
+        "trial",
+        "context",
+        "object_set",
+        situation=pl.concat_str("context", "object1", "object2"),
+        action=np.array(["left", "right"])[index],
+        object=pl.concat_list("object1", "object2").list.get(index),
+        valence=pl.concat_list("valence1", "valence2").list.get(index),
+    )
+    design = (
+        pl.concat(
+            [
+                df_trial.with_columns(trial_type=pl.lit("choice")),
+                df_trial.with_columns(trial_type=pl.lit("feedback")),
+            ]
+        ).sort("phase", "trial", "context", "trial_type")
+        .with_columns(
+            node=pl.when(pl.col("trial_type") == "choice").then("situation").otherwise("valence")
+        )
+    )
+    return design
 
 
 def generate_env(spec, n_obs, observations):
