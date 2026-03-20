@@ -220,6 +220,39 @@ def learn_design(env_files, design_files, out_dir, subject, run):
     return tem_model
 
 
+def walks_mckenzie(design, nodes, n_obs):
+    # create a one-hot tensor for each observation
+    observations = {}
+    for i, name in enumerate(nodes):
+        obs = torch.zeros(n_obs).scatter_(0, torch.tensor(i), torch.ones(n_obs))
+        observations[name] = obs.view(obs.shape[0])
+
+    actions = {"left": 0, "right": 1}
+    walks = []
+    for row in design.iter_rows(named=True):
+        if row["trial_type"] == "choice":
+            steps = []
+            steps.append(
+                [
+                    [{"id": nodes.index(row["node"])}],
+                    [observations[row["node"]]],
+                    [actions[row["action"]]],
+                ]
+            )
+        elif row["trial_type"] == "feedback":
+            steps.append(
+                [
+                    [{"id": nodes.index(row["node"])}],
+                    [observations[row["node"]]],
+                    [0],
+                ]
+            )
+            for i_step, step in enumerate(steps):
+                steps[i_step][1] = torch.stack(step[1], dim=0)
+            walks.append(steps)
+    return walks
+
+
 def generate_mckenzie(config_file):
     """
     Generate data in the McKenzie hierarchical schema paradigm.
