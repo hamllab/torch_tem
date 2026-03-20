@@ -237,14 +237,15 @@ def generate_mckenzie(config_file):
         config = json.load(f)
 
     df_list = []
+    valence_labels = {-1: "no reward", 1: "reward"}
     for phase in config["phases"]:
         n = phase["n"]
         context = np.empty(n, dtype=StringDType)
         object_set = np.empty(n, dtype=StringDType)
         object1 = np.empty(n, dtype=StringDType)
         object2 = np.empty(n, dtype=StringDType)
-        valence1 = np.empty(n, dtype=int)
-        valence2 = np.empty(n, dtype=int)
+        valence1 = np.empty(n, dtype=StringDType)
+        valence2 = np.empty(n, dtype=StringDType)
         trial = np.arange(1, n + 1)
         phase_contexts = list(phase["contexts"].keys())
         for i in range(n):
@@ -271,8 +272,8 @@ def generate_mckenzie(config_file):
                 object2[i] = objects[0]
 
             # determine valence
-            valence1[i] = valences[obj_set][object1[i]]
-            valence2[i] = valences[obj_set][object2[i]]
+            valence1[i] = valence_labels[valences[obj_set][object1[i]]]
+            valence2[i] = valence_labels[valences[obj_set][object2[i]]]
 
         # create a data frame with all trial information
         phase_df = pl.DataFrame(
