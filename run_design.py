@@ -123,7 +123,7 @@ visited = [[False for _ in range(env.n_locations)]]
 prev_iter = None
 # Train TEM on walks in different environment
 actions = {"south": 1, "east": 2, "north": 3, "west": 4}
-walks = world.design_walks(design, env, actions)
+walks = world.walks_operators(design, env, actions)
 # for i in range(i_start, train_iter + 1):
 for i, walk in enumerate(walks):
     i += n_initial

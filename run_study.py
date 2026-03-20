@@ -46,4 +46,4 @@ for number in range(1, n_subj + 1):
 
     out_dir.mkdir(exist_ok=True)
     for run in range(1, n_runs + 1):
-        tem_model = world.learn_design(env_files, design_files, out_dir, subject, run)
+        tem_model = world.learn_operators(env_files, design_files, out_dir, subject, run)

@@ -22,7 +22,107 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 # Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
-def design_walks(design, env, actions):
+def generate_mckenzie(config_file):
+    """
+    Generate data in the McKenzie hierarchical schema paradigm.
+
+    Parameters
+    ----------
+    config_file : str, Path
+        Each element indicates one phase of training (e.g., AB, CD,
+        ABCD). Each element gives a list of trial types, indicating
+        the current contexts and object sets to be presented together.
+        Within each trial type, there is a list of contexts that gives
+        the object-reward pairings in that context in that set.
+    """
+    with open(config_file, "r") as f:
+        config = json.load(f)
+
+    df_list = []
+    valence_labels = {-1: "no reward", 1: "reward"}
+    for phase in config["phases"]:
+        n = phase["n"]
+        context = np.empty(n, dtype=StringDType)
+        object_set = np.empty(n, dtype=StringDType)
+        object1 = np.empty(n, dtype=StringDType)
+        object2 = np.empty(n, dtype=StringDType)
+        valence1 = np.empty(n, dtype=StringDType)
+        valence2 = np.empty(n, dtype=StringDType)
+        trial = np.arange(1, n + 1)
+        phase_contexts = list(phase["contexts"].keys())
+        for i in range(n):
+            # pick a context (not the same as the previous)
+            if n == 1:
+                context[i] = np.random.choice(phase_contexts)
+            else:
+                other_contexts = [p for p in phase_contexts if p != context[i - 1]]
+                context[i] = np.random.choice(other_contexts)
+
+            # pick an object set
+            valences = phase["contexts"][context[i]]
+            object_sets = list(valences.keys())
+            obj_set = np.random.choice(object_sets)
+            object_set[i] = obj_set
+            objects = list(valences[obj_set].keys())
+
+            # pick an ordering via coin flip
+            if np.random.rand() < 0.5:
+                object1[i] = objects[0]
+                object2[i] = objects[1]
+            else:
+                object1[i] = objects[1]
+                object2[i] = objects[0]
+
+            # determine valence
+            valence1[i] = valence_labels[valences[obj_set][object1[i]]]
+            valence2[i] = valence_labels[valences[obj_set][object2[i]]]
+
+        # create a data frame with all trial information
+        phase_df = pl.DataFrame(
+            {
+                "phase": phase["name"],
+                "trial": trial,
+                "context": context,
+                "object_set": object_set,
+                "object1": object1,
+                "object2": object2,
+                "valence1": valence1,
+                "valence2": valence2,
+            }
+        )
+        df_list.append(phase_df)
+    df = pl.concat(df_list)
+    return df
+
+
+def design_mckenzie(config_file):
+    df = generate_mckenzie(config_file)
+    index = np.random.choice([0, 1], size=df.shape[0])
+    df_trial = df.select(
+        "phase",
+        "trial",
+        "context",
+        "object_set",
+        situation=pl.concat_str("context", "object1", "object2"),
+        action=np.array(["left", "right"])[index],
+        object=pl.concat_list("object1", "object2").list.get(index),
+        valence=pl.concat_list("valence1", "valence2").list.get(index),
+    )
+    design = (
+        pl.concat(
+            [
+                df_trial.with_columns(trial_type=pl.lit("choice")),
+                df_trial.with_columns(trial_type=pl.lit("feedback")),
+            ]
+        ).sort("phase", "trial", "context", "trial_type")
+        .with_columns(
+            node=pl.when(pl.col("trial_type") == "choice").then("situation").otherwise("valence")
+        )
+    )
+    return design
+
+
+def walks_operators(design, env, actions):
     """Create walks from a learning phase design."""
     walks = []
     nodes = [f"node_{n}" for n in range(1, 7)]
@@ -65,6 +165,39 @@ def design_walks(design, env, actions):
         for i_step, step in enumerate(steps):
             steps[i_step][1] = torch.stack(step[1], dim=0)
         walks.append(steps)
+    return walks
+
+
+def walks_mckenzie(design, nodes, n_obs):
+    # create a one-hot tensor for each observation
+    observations = {}
+    for i, name in enumerate(nodes):
+        obs = torch.zeros(n_obs).scatter_(0, torch.tensor(i), torch.ones(n_obs))
+        observations[name] = obs.view(obs.shape[0])
+
+    actions = {"left": 0, "right": 1}
+    walks = []
+    for row in design.iter_rows(named=True):
+        if row["trial_type"] == "choice":
+            steps = []
+            steps.append(
+                [
+                    [{"id": nodes.index(row["node"]), "shiny": None}],
+                    [observations[row["node"]]],
+                    [actions[row["action"]]],
+                ]
+            )
+        elif row["trial_type"] == "feedback":
+            steps.append(
+                [
+                    [{"id": nodes.index(row["node"]), "shiny": None}],
+                    [observations[row["node"]]],
+                    [0],
+                ]
+            )
+            for i_step, step in enumerate(steps):
+                steps[i_step][1] = torch.stack(step[1], dim=0)
+            walks.append(steps)
     return walks
 
 
@@ -194,7 +327,7 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
     return tem_model, adam, params, i
 
 
-def learn_design(env_files, design_files, out_dir, subject, run):
+def learn_operators(env_files, design_files, out_dir, subject, run):
     """Perform learning of multiple designs."""
     designs = [pl.read_csv(file) for file in design_files]
     out_dir = Path(out_dir)
@@ -205,7 +338,7 @@ def learn_design(env_files, design_files, out_dir, subject, run):
     for d, design in enumerate(designs):
         env = World(env_files[d], randomise_observations=True, shiny=None)
         actions = {"south": 1, "east": 2, "north": 3, "west": 4}
-        walks = design_walks(design, env, actions)
+        walks = walks_operators(design, env, actions)
         design_out_dir = out_dir / f"design-{d}"
         tem_model, adam, params, i = learn_walks(
             walks, env, tem_model, adam, params, design_out_dir, i
@@ -241,139 +374,6 @@ def learn_mckenzie(design, nodes, out_dir, run):
         tem_model.hyper,
         out_dir / f"sub-{subject}_run-{run}_params.pt",
     )
-
-
-def walks_mckenzie(design, nodes, n_obs):
-    # create a one-hot tensor for each observation
-    observations = {}
-    for i, name in enumerate(nodes):
-        obs = torch.zeros(n_obs).scatter_(0, torch.tensor(i), torch.ones(n_obs))
-        observations[name] = obs.view(obs.shape[0])
-
-    actions = {"left": 0, "right": 1}
-    walks = []
-    for row in design.iter_rows(named=True):
-        if row["trial_type"] == "choice":
-            steps = []
-            steps.append(
-                [
-                    [{"id": nodes.index(row["node"]), "shiny": None}],
-                    [observations[row["node"]]],
-                    [actions[row["action"]]],
-                ]
-            )
-        elif row["trial_type"] == "feedback":
-            steps.append(
-                [
-                    [{"id": nodes.index(row["node"]), "shiny": None}],
-                    [observations[row["node"]]],
-                    [0],
-                ]
-            )
-            for i_step, step in enumerate(steps):
-                steps[i_step][1] = torch.stack(step[1], dim=0)
-            walks.append(steps)
-    return walks
-
-
-def generate_mckenzie(config_file):
-    """
-    Generate data in the McKenzie hierarchical schema paradigm.
-
-    Parameters
-    ----------
-    config_file : str, Path
-        Each element indicates one phase of training (e.g., AB, CD,
-        ABCD). Each element gives a list of trial types, indicating
-        the current contexts and object sets to be presented together.
-        Within each trial type, there is a list of contexts that gives
-        the object-reward pairings in that context in that set.
-    """
-    with open(config_file, "r") as f:
-        config = json.load(f)
-
-    df_list = []
-    valence_labels = {-1: "no reward", 1: "reward"}
-    for phase in config["phases"]:
-        n = phase["n"]
-        context = np.empty(n, dtype=StringDType)
-        object_set = np.empty(n, dtype=StringDType)
-        object1 = np.empty(n, dtype=StringDType)
-        object2 = np.empty(n, dtype=StringDType)
-        valence1 = np.empty(n, dtype=StringDType)
-        valence2 = np.empty(n, dtype=StringDType)
-        trial = np.arange(1, n + 1)
-        phase_contexts = list(phase["contexts"].keys())
-        for i in range(n):
-            # pick a context (not the same as the previous)
-            if n == 1:
-                context[i] = np.random.choice(phase_contexts)
-            else:
-                other_contexts = [p for p in phase_contexts if p != context[i - 1]]
-                context[i] = np.random.choice(other_contexts)
-
-            # pick an object set
-            valences = phase["contexts"][context[i]]
-            object_sets = list(valences.keys())
-            obj_set = np.random.choice(object_sets)
-            object_set[i] = obj_set
-            objects = list(valences[obj_set].keys())
-
-            # pick an ordering via coin flip
-            if np.random.rand() < 0.5:
-                object1[i] = objects[0]
-                object2[i] = objects[1]
-            else:
-                object1[i] = objects[1]
-                object2[i] = objects[0]
-
-            # determine valence
-            valence1[i] = valence_labels[valences[obj_set][object1[i]]]
-            valence2[i] = valence_labels[valences[obj_set][object2[i]]]
-
-        # create a data frame with all trial information
-        phase_df = pl.DataFrame(
-            {
-                "phase": phase["name"],
-                "trial": trial,
-                "context": context,
-                "object_set": object_set,
-                "object1": object1,
-                "object2": object2,
-                "valence1": valence1,
-                "valence2": valence2,
-            }
-        )
-        df_list.append(phase_df)
-    df = pl.concat(df_list)
-    return df
-
-
-def design_mckenzie(config_file):
-    df = generate_mckenzie(config_file)
-    index = np.random.choice([0, 1], size=df.shape[0])
-    df_trial = df.select(
-        "phase",
-        "trial",
-        "context",
-        "object_set",
-        situation=pl.concat_str("context", "object1", "object2"),
-        action=np.array(["left", "right"])[index],
-        object=pl.concat_list("object1", "object2").list.get(index),
-        valence=pl.concat_list("valence1", "valence2").list.get(index),
-    )
-    design = (
-        pl.concat(
-            [
-                df_trial.with_columns(trial_type=pl.lit("choice")),
-                df_trial.with_columns(trial_type=pl.lit("feedback")),
-            ]
-        ).sort("phase", "trial", "context", "trial_type")
-        .with_columns(
-            node=pl.when(pl.col("trial_type") == "choice").then("situation").otherwise("valence")
-        )
-    )
-    return design
 
 
 def generate_env(spec, n_obs, observations):
