@@ -22,7 +22,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 # Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
-def generate_mckenzie(config_file):
+def generate_mckenzie(config_file, n_trials=None):
     """
     Generate data in the McKenzie hierarchical schema paradigm.
 
@@ -34,14 +34,21 @@ def generate_mckenzie(config_file):
         the current contexts and object sets to be presented together.
         Within each trial type, there is a list of contexts that gives
         the object-reward pairings in that context in that set.
+
+    n_trials : dict of int, optional
+        Number of trials for each phase. If not specified, will be
+        taken from the config file.
     """
     with open(config_file, "r") as f:
         config = json.load(f)
 
+    if n_trials is None:
+        n_trials = {phase["name"]: phase["n"] for phase in config["phases"]}
+
     df_list = []
     valence_labels = {-1: "N", 1: "R"}
     for phase in config["phases"]:
-        n = phase["n"]
+        n = n_trials[phase["name"]]
         context = np.empty(n, dtype=StringDType)
         object_set = np.empty(n, dtype=StringDType)
         object1 = np.empty(n, dtype=StringDType)
@@ -95,8 +102,8 @@ def generate_mckenzie(config_file):
     return df
 
 
-def design_mckenzie(config_file):
-    df = generate_mckenzie(config_file)
+def design_mckenzie(config_file, n_trials=None):
+    df = generate_mckenzie(config_file, n_trials)
     index = np.random.choice([0, 1], size=df.shape[0])
     df_trial = df.select(
         "phase",
