@@ -115,17 +115,14 @@ def design_mckenzie(config_file, n_trials=None):
         object=pl.concat_list("object1", "object2").list.get(index),
         valence=pl.concat_list("valence1", "valence2").list.get(index),
     )
-    design = (
-        pl.concat(
-            [
-                df_trial.with_columns(trial_type=pl.lit("choice")),
-                df_trial.with_columns(
-                    trial_type=pl.lit("feedback"),
-                    node=pl.concat_str("context", "action", "object", "valence")
-                ),
-            ]
-        ).sort("phase", "trial", "context", "trial_type")
+    df_choice = df_trial.with_row_index().with_columns(
+        trial_type=pl.lit("choice")
     )
+    df_feedback = df_trial.with_row_index().with_columns(
+        trial_type=pl.lit("feedback"),
+        node=pl.concat_str("context", "action", "object", "valence")
+    )
+    design = pl.concat([df_choice, df_feedback]).sort("index", "trial_type")
     return design
 
 
