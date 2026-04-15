@@ -140,7 +140,7 @@ def parameters():
     # Number of neurons of entorhinal abstract location g for each frequency
     params["n_g"] = [3 * g for g in params["n_g_subsampled"]]
     # Neurons for sensory observation x
-    params["n_x"] = 54
+    params["n_x"] = 45
     # Neurons for compressed sensory experience x_c
     params["n_x_c"] = 10
     # Neurons for temporally filtered sensory experience x for each frequency
