@@ -172,12 +172,17 @@ def walks_operators(design, env, actions):
     return walks
 
 
-def walks_mckenzie(design, nodes, n_obs):
+def walks_mckenzie(design, nodes, node_features, features, n_obs):
     # create a one-hot tensor for each observation
     observations = {}
     for i, name in enumerate(nodes):
         obs = torch.zeros(n_obs).scatter_(0, torch.tensor(i), torch.ones(n_obs))
         observations[name] = obs.view(obs.shape[0])
+
+    for i, feats in enumerate(node_features):
+        for feat, value in feats.items():
+            j = features[feat]["start"] + features[feat]["items"].index(value)
+            observations[nodes[i]][j] = 1
 
     actions = {"L": 0, "R": 1}
     walks = []
@@ -358,14 +363,14 @@ def learn_operators(env_files, design_files, out_dir, subject, run):
     return tem_model
 
 
-def learn_mckenzie(design, nodes, out_dir, run):
+def learn_mckenzie(design, node_labels, node_features, features, out_dir, run):
     """Learn McKenzie design."""
     out_dir = Path(out_dir)
     params = parameters.parameters()
     tem_model = model.Model(params)
     adam = torch.optim.Adam(tem_model.parameters(), lr=params["lr_max"])
-    walks = walks_mckenzie(design, nodes, params["n_x"])
-    env = SimpleNamespace(n_locations=len(nodes))
+    walks = walks_mckenzie(design, node_labels, node_features, features, params["n_x"])
+    env = SimpleNamespace(n_locations=len(node_labels))
     tem_model, adam, params, i = learn_walks(
         walks, env, tem_model, adam, params, out_dir, run
     )
