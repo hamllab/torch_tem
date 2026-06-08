@@ -1,0 +1,13 @@
+{
+    "has_static_action": True,
+    "n_actions":4,
+    "loss_weights_x": 1,
+    "loss_weights_p": 1,
+    "loss_weights_g": 1,
+    "loss_weights_reg_g": 0.01,
+    "loss_weights_reg_p": 0.02,
+    "n_x": 45,
+    "n_x_c": 10,
+    "lambda": 0.9999,
+    "eta": 0.5
+}
