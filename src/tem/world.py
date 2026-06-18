@@ -333,14 +333,19 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
                 writer.add_scalar("Accuracies/p", acc_p, i)
                 writer.add_scalar("Accuracies/g", acc_g, i)
                 writer.add_scalar("Accuracies/gt", acc_gt, i)
+
+    writer.close()
+
     return tem_model, adam, params, i
 
 
-def learn_operators(env_files, design_files, out_dir, subject, run):
+def learn_operators(env_files, design_files, out_dir, subject, run, override_file):
     """Perform learning of multiple designs."""
     designs = [pl.read_csv(file) for file in design_files]
     out_dir = Path(out_dir)
     params = parameters.parameters()
+    with open(override_file) as f:
+        params.update(json.load(f))
     tem_model = model.Model(params)
     adam = torch.optim.Adam(tem_model.parameters(), lr=params["lr_max"])
     i = 0  # iteration counter
@@ -348,6 +353,7 @@ def learn_operators(env_files, design_files, out_dir, subject, run):
         env = World(env_files[d], randomise_observations=True, shiny=None)
         actions = {"south": 1, "east": 2, "north": 3, "west": 4}
         walks = walks_operators(design, env, actions)
+        walks = walks * 10
         design_out_dir = out_dir / f"design-{d}"
         tem_model, adam, params, i = learn_walks(
             walks, env, tem_model, adam, params, design_out_dir, i
