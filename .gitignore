@@ -1,10 +1,10 @@
-# Byte-compiled / optimized / DLL files
+#B Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
 # C extensions
-*.so
+A*.so
 
 # Distribution / packaging
 .Python
@@ -178,3 +178,22 @@ venv*/
 
 # PyCharm
 .idea/
+cat >> .gitignore << 'EOF'
+!v5/design/
+!v5/design/sub-*/
+!v5/design/sub-*/*task-distance_design.csv
+!v5/design/sub-*/*task-dragdrop_design.csv
+!v5/design/sub-*/*task-learning_design.csv
+!v5/design/sub-*/*task-recognition_design.csv
+EOF
+events.out.tfevents.*
+
+v5/design/**/path_analysis/
+v5/design/**/distance_analysis/
+v5/design/**/*.png
+v5/design/**/*.txt
+v5/design/**/*.json
+v5/design/**/*.pt
+events.out.tfevents.*
+src/.claude/settings.local.json
+v5/design/similarity/
