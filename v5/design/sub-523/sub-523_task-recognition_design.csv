@@ -1,0 +1,37 @@
+graph,trial_number,cue_MST,label,correct_Ans_MST
+graph_2,1,stim/paper lantern_b.png,new,right
+graph_1,2,stim/flashlight_b.jpg,similar,down
+graph_2,3,stim/allen wrench_a.png,old,left
+graph_1,4,stim/binder_b.png,old,left
+graph_2,5,stim/beanie_b.png,new,right
+graph_1,6,stim/flashlight_a.png,old,left
+graph_1,7,stim/trampoline_b.png,old,left
+graph_2,8,stim/treadmill_b.png,old,left
+graph_2,9,stim/disco ball_b.png,new,right
+graph_1,10,stim/broom_a.jpg,similar,down
+graph_2,11,stim/hedge shears_b.jpg,similar,down
+graph_1,12,stim/wallet_a.png,new,right
+graph_1,13,stim/broom_b.png,old,left
+graph_2,14,stim/sunflower_b.jpg,similar,down
+graph_1,15,stim/circular saw blade_a.png,old,left
+graph_1,16,stim/binder_a.jpg,similar,down
+graph_1,17,stim/trampoline_a.jpg,similar,down
+graph_1,18,stim/rake_b.png,new,right
+graph_2,19,stim/baseball_b.png,old,left
+graph_1,20,stim/clarinet_b.png,new,right
+graph_1,21,stim/television_b.png,new,right
+graph_2,22,stim/guitar amplifier_a.png,old,left
+graph_2,23,stim/allen wrench_b.jpg,similar,down
+graph_2,24,stim/pretzel_b.png,new,right
+graph_1,25,stim/cinnamon roll_b.png,new,right
+graph_2,26,stim/guitar amplifier_b.jpg,similar,down
+graph_2,27,stim/baseball_a.jpg,similar,down
+graph_2,28,stim/leaf blower_a.png,new,right
+graph_1,29,stim/gravy boat_a.jpg,similar,down
+graph_2,30,stim/pool table_a.png,new,right
+graph_2,31,stim/sunflower_a.png,old,left
+graph_2,32,stim/treadmill_a.jpg,similar,down
+graph_1,33,stim/gravy boat_b.png,old,left
+graph_2,34,stim/hedge shears_a.png,old,left
+graph_1,35,stim/tennis ball_b.png,new,right
+graph_1,36,stim/circular saw blade_b.jpg,similar,down

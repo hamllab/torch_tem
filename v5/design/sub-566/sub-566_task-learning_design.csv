@@ -1,0 +1,467 @@
+graph,trial_number,trial_type,start,start_node,move,move_direction,cue,cue_node,operator,direction,probe1,probe2,target_node,target,lure,correct,lure_distance,experiment_condition,block,instruction_text,sub_block
+practice,1,practice_prediction,,,,,stim/practice1.jpg,node_1,Melp,south,stim/practice3.jpg,stim/practice2.jpg,node_3,stim/practice3.jpg,node_2,left,,,,,
+practice,2,practice_prediction,,,,,stim/practice3.jpg,node_3,Brinz,east,stim/practice2.jpg,stim/practice4.jpg,node_4,stim/practice4.jpg,node_2,right,,,,,
+practice,3,practice_prediction,,,,,stim/practice4.jpg,node_4,Wosp,north,stim/practice1.jpg,stim/practice2.jpg,node_2,stim/practice2.jpg,node_1,right,,,,,
+practice,4,practice_prediction,,,,,stim/practice2.jpg,node_2,Troid,west,stim/practice1.jpg,stim/practice3.jpg,node_1,stim/practice1.jpg,node_3,left,,,,,
+practice,1,practice_prediction,,,,,stim/practice1.jpg,node_1,Brinz,east,stim/practice2.jpg,stim/practice3.jpg,node_2,stim/practice2.jpg,node_3,left,,,,,
+practice,2,practice_prediction,,,,,stim/practice2.jpg,node_2,Melp,south,stim/practice4.jpg,stim/practice1.jpg,node_4,stim/practice4.jpg,node_1,left,,,,,
+practice,3,practice_prediction,,,,,stim/practice4.jpg,node_4,Troid,west,stim/practice2.jpg,stim/practice3.jpg,node_3,stim/practice3.jpg,node_2,right,,,,,
+practice,4,practice_prediction,,,,,stim/practice3.jpg,node_3,Wosp,north,stim/practice1.jpg,stim/practice2.jpg,node_1,stim/practice1.jpg,node_2,left,,,,,
+practice,1,practice_integration,stim/practice1.jpg,node_1,Brinz,east,stim/practice2.jpg,node_2,Melp,south,stim/practice4.jpg,stim/practice3.jpg,node_3,stim/practice4.jpg,node_4,left,,,,,
+practice,2,practice_integration,stim/practice4.jpg,node_3,Troid,west,stim/practice3.jpg,node_4,Wosp,north,stim/practice1.jpg,stim/practice2.jpg,node_1,stim/practice1.jpg,node_2,left,,,,,
+practice,3,practice_integration,stim/practice2.jpg,node_2,Melp,south,stim/practice4.jpg,node_3,Troid,west,stim/practice1.jpg,stim/practice3.jpg,node_1,stim/practice3.jpg,node_4,right,,,,,
+practice,4,practice_integration,stim/practice3.jpg,node_4,Wosp,north,stim/practice1.jpg,node_1,Brinz,east,stim/practice2.jpg,stim/practice4.jpg,node_2,stim/practice2.jpg,node_3,left,,,,,
+practice,5,practice_integration,stim/practice2.jpg,node_2,Troid,west,stim/practice1.jpg,node_1,Melp,south,stim/practice4.jpg,stim/practice3.jpg,node_4,stim/practice3.jpg,node_3,right,,,,,
+practice,6,practice_integration,stim/practice3.jpg,node_4,Brinz,east,stim/practice4.jpg,node_3,Wosp,north,stim/practice1.jpg,stim/practice2.jpg,node_2,stim/practice2.jpg,node_1,right,,,,,
+practice,7,practice_integration,stim/practice4.jpg,node_3,Troid,west,stim/practice3.jpg,node_4,Wosp,north,stim/practice4.jpg,stim/practice1.jpg,node_1,stim/practice1.jpg,node_4,right,,,,,
+practice,8,practice_integration,stim/practice1.jpg,node_1,Brinz,east,stim/practice2.jpg,node_2,Melp,south,stim/practice4.jpg,stim/practice3.jpg,node_3,stim/practice4.jpg,node_4,left,,,,,
+graph_1,0,instruction,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,1,"The practice is complete. 
+
+You will now see new objects and new relationships to learn. 
+
+Try your best to learn each relationship.",1.0
+graph_1,1,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,1,,1.0
+graph_1,2,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_2,right,2.0,associative_learning,1,,1.0
+graph_1,3,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/leaf blower_a.png,stim/hedge shears_b.png,node_5,stim/leaf blower_a.png,node_3,left,2.0,associative_learning,1,,1.0
+graph_1,4,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,1.0,associative_learning,1,,1.0
+graph_1,5,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/leaf blower_a.png,node_3,stim/hedge shears_b.png,node_5,left,1.0,associative_learning,1,,1.0
+graph_1,6,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,2.0,associative_learning,1,,1.0
+graph_1,7,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_2,right,3.0,associative_learning,1,,1.0
+graph_1,8,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/television_b.png,node_4,stim/allen wrench_b.png,node_6,left,1.0,associative_learning,1,,1.0
+graph_1,9,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/television_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_6,right,2.0,associative_learning,1,,1.0
+graph_1,10,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_2,stim/guitar amplifier_b.png,node_5,left,2.0,associative_learning,1,,1.0
+graph_1,11,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/hedge shears_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_3,right,1.0,associative_learning,1,,1.0
+graph_1,12,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/television_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_6,right,1.0,associative_learning,1,,1.0
+graph_1,13,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,1.0,associative_learning,1,,1.0
+graph_1,14,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_2,right,2.0,associative_learning,1,,1.0
+graph_1,15,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/binder_b.png,stim/leaf blower_a.png,node_1,stim/binder_b.png,node_5,left,3.0,associative_learning,1,,1.0
+graph_1,16,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_2,stim/guitar amplifier_b.png,node_4,left,2.0,associative_learning,1,,1.0
+graph_1,17,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/binder_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_1,right,1.0,associative_learning,1,,1.0
+graph_1,18,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/television_b.png,node_2,stim/guitar amplifier_b.png,node_6,left,2.0,associative_learning,1,,1.0
+graph_1,19,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/hedge shears_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_3,right,1.0,associative_learning,1,,1.0
+graph_1,20,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/hedge shears_b.png,stim/television_b.png,node_6,stim/television_b.png,node_3,right,2.0,associative_learning,1,,1.0
+graph_1,21,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/allen wrench_b.png,node_3,stim/hedge shears_b.png,node_4,left,3.0,associative_learning,1,,1.0
+graph_1,22,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_2,stim/guitar amplifier_b.png,node_5,left,2.0,associative_learning,1,,1.0
+graph_1,23,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/television_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_6,right,1.0,associative_learning,1,,1.0
+graph_1,24,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/hedge shears_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_3,right,2.0,associative_learning,1,,1.0
+graph_1,25,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,1,,1.0
+graph_1,26,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/binder_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_1,right,2.0,associative_learning,1,,1.0
+graph_1,27,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/leaf blower_a.png,stim/allen wrench_b.png,node_5,stim/leaf blower_a.png,node_4,left,2.0,associative_learning,1,,1.0
+graph_1,28,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_2,right,1.0,associative_learning,1,,1.0
+graph_1,29,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_2,right,2.0,associative_learning,1,,1.0
+graph_1,30,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_4,right,2.0,associative_learning,1,,1.0
+graph_1,31,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/leaf blower_a.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_5,right,1.0,associative_learning,1,,1.0
+graph_1,32,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/leaf blower_a.png,stim/television_b.png,node_6,stim/television_b.png,node_5,right,2.0,associative_learning,1,,1.0
+graph_1,33,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/guitar amplifier_b.png,node_3,stim/hedge shears_b.png,node_2,left,3.0,associative_learning,1,,1.0
+graph_1,34,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/binder_b.png,node_2,stim/guitar amplifier_b.png,node_1,left,2.0,associative_learning,1,,1.0
+graph_1,35,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/hedge shears_b.png,stim/television_b.png,node_3,stim/hedge shears_b.png,node_6,left,2.0,associative_learning,1,,1.0
+graph_1,36,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_2,stim/guitar amplifier_b.png,node_5,left,2.0,associative_learning,1,,1.0
+graph_1,37,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/allen wrench_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_4,right,1.0,associative_learning,1,,1.0
+graph_1,38,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/television_b.png,stim/binder_b.png,node_6,stim/television_b.png,node_1,left,2.0,associative_learning,1,,1.0
+graph_1,39,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/leaf blower_a.png,stim/hedge shears_b.png,node_5,stim/leaf blower_a.png,node_3,left,1.0,associative_learning,1,,1.0
+graph_1,40,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/hedge shears_b.png,stim/television_b.png,node_6,stim/television_b.png,node_3,right,2.0,associative_learning,1,,1.0
+graph_1,41,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/guitar amplifier_b.png,node_3,stim/hedge shears_b.png,node_2,left,2.0,associative_learning,1,,1.0
+graph_1,42,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/guitar amplifier_b.png,stim/television_b.png,node_6,stim/television_b.png,node_2,right,2.0,associative_learning,1,,1.0
+graph_1,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,1,,1.0
+graph_1,43,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/hedge shears_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_3,right,3.0,associative_learning,1,,2.0
+graph_1,44,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/television_b.png,node_4,stim/allen wrench_b.png,node_6,left,1.0,associative_learning,1,,2.0
+graph_1,45,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/leaf blower_a.png,stim/binder_b.png,node_1,stim/binder_b.png,node_5,right,2.0,associative_learning,1,,2.0
+graph_1,46,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/television_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_6,right,3.0,associative_learning,1,,2.0
+graph_1,47,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/binder_b.png,stim/guitar amplifier_b.png,node_1,stim/binder_b.png,node_2,left,2.0,associative_learning,1,,2.0
+graph_1,48,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/allen wrench_b.png,stim/hedge shears_b.png,node_4,stim/allen wrench_b.png,node_3,left,2.0,associative_learning,1,,2.0
+graph_1,49,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,1.0,associative_learning,1,,2.0
+graph_1,50,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/television_b.png,stim/allen wrench_b.png,node_6,stim/television_b.png,node_4,left,1.0,associative_learning,1,,2.0
+graph_1,51,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/leaf blower_a.png,node_3,stim/hedge shears_b.png,node_5,left,3.0,associative_learning,1,,2.0
+graph_1,52,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,2.0,associative_learning,1,,2.0
+graph_1,53,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,3.0,associative_learning,1,,2.0
+graph_1,54,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/television_b.png,stim/allen wrench_b.png,node_6,stim/television_b.png,node_4,left,2.0,associative_learning,1,,2.0
+graph_1,55,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/leaf blower_a.png,node_3,stim/hedge shears_b.png,node_5,left,3.0,associative_learning,1,,2.0
+graph_1,56,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/television_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_6,right,1.0,associative_learning,1,,2.0
+graph_1,57,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/hedge shears_b.png,node_1,stim/binder_b.png,node_3,left,1.0,associative_learning,1,,2.0
+graph_1,58,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/television_b.png,node_2,stim/guitar amplifier_b.png,node_6,left,3.0,associative_learning,1,,2.0
+graph_1,59,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/hedge shears_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_3,right,1.0,associative_learning,1,,2.0
+graph_1,60,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_4,stim/allen wrench_b.png,node_2,left,1.0,associative_learning,1,,2.0
+graph_1,61,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,1,,2.0
+graph_1,62,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,2.0,associative_learning,1,,2.0
+graph_1,63,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/leaf blower_a.png,node_3,stim/hedge shears_b.png,node_5,left,3.0,associative_learning,1,,2.0
+graph_1,64,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/binder_b.png,node_2,stim/guitar amplifier_b.png,node_1,left,2.0,associative_learning,1,,2.0
+graph_1,65,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/television_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_6,right,2.0,associative_learning,1,,2.0
+graph_1,66,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/television_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_6,right,2.0,associative_learning,1,,2.0
+graph_1,67,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/hedge shears_b.png,stim/binder_b.png,node_3,stim/hedge shears_b.png,node_1,left,1.0,associative_learning,1,,2.0
+graph_1,68,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/guitar amplifier_b.png,stim/television_b.png,node_6,stim/television_b.png,node_2,right,1.0,associative_learning,1,,2.0
+graph_1,69,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/allen wrench_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_4,right,2.0,associative_learning,1,,2.0
+graph_1,70,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/leaf blower_a.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_5,right,2.0,associative_learning,1,,2.0
+graph_1,71,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/hedge shears_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_3,right,1.0,associative_learning,1,,2.0
+graph_1,72,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_2,right,1.0,associative_learning,1,,2.0
+graph_1,73,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,1.0,associative_learning,1,,2.0
+graph_1,74,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/hedge shears_b.png,node_4,stim/allen wrench_b.png,node_3,left,2.0,associative_learning,1,,2.0
+graph_1,75,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/binder_b.png,stim/television_b.png,node_1,stim/binder_b.png,node_6,left,2.0,associative_learning,1,,2.0
+graph_1,76,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/leaf blower_a.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_5,right,2.0,associative_learning,1,,2.0
+graph_1,77,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/allen wrench_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_4,right,2.0,associative_learning,1,,2.0
+graph_1,78,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/binder_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_1,right,2.0,associative_learning,1,,2.0
+graph_1,79,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/hedge shears_b.png,node_1,stim/binder_b.png,node_3,left,1.0,associative_learning,1,,2.0
+graph_1,80,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/television_b.png,node_2,stim/guitar amplifier_b.png,node_6,left,2.0,associative_learning,1,,2.0
+graph_1,81,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/leaf blower_a.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_5,right,1.0,associative_learning,1,,2.0
+graph_1,82,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/television_b.png,stim/guitar amplifier_b.png,node_6,stim/television_b.png,node_2,left,1.0,associative_learning,1,,2.0
+graph_1,83,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_2,right,2.0,associative_learning,1,,2.0
+graph_1,84,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_2,stim/guitar amplifier_b.png,node_4,left,1.0,associative_learning,1,,2.0
+graph_1,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,1,,2.0
+graph_1,85,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/television_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_6,right,1.0,associative_learning,1,,3.0
+graph_1,86,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,2.0,associative_learning,1,,3.0
+graph_1,87,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,3.0,associative_learning,1,,3.0
+graph_1,88,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/hedge shears_b.png,stim/television_b.png,node_6,stim/television_b.png,node_3,right,2.0,associative_learning,1,,3.0
+graph_1,89,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/leaf blower_a.png,stim/guitar amplifier_b.png,node_5,stim/leaf blower_a.png,node_2,left,2.0,associative_learning,1,,3.0
+graph_1,90,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/television_b.png,node_4,stim/allen wrench_b.png,node_6,left,2.0,associative_learning,1,,3.0
+graph_1,91,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_2,right,1.0,associative_learning,1,,3.0
+graph_1,92,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/hedge shears_b.png,node_4,stim/allen wrench_b.png,node_3,left,2.0,associative_learning,1,,3.0
+graph_1,93,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/binder_b.png,stim/leaf blower_a.png,node_1,stim/binder_b.png,node_5,left,1.0,associative_learning,1,,3.0
+graph_1,94,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_2,stim/guitar amplifier_b.png,node_5,left,2.0,associative_learning,1,,3.0
+graph_1,95,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/leaf blower_a.png,stim/allen wrench_b.png,node_5,stim/leaf blower_a.png,node_4,left,1.0,associative_learning,1,,3.0
+graph_1,96,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/binder_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_1,right,2.0,associative_learning,1,,3.0
+graph_1,97,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/hedge shears_b.png,stim/television_b.png,node_3,stim/hedge shears_b.png,node_6,left,1.0,associative_learning,1,,3.0
+graph_1,98,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/binder_b.png,stim/television_b.png,node_6,stim/television_b.png,node_1,right,2.0,associative_learning,1,,3.0
+graph_1,99,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/leaf blower_a.png,stim/hedge shears_b.png,node_5,stim/leaf blower_a.png,node_3,left,2.0,associative_learning,1,,3.0
+graph_1,100,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,1.0,associative_learning,1,,3.0
+graph_1,101,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_2,right,2.0,associative_learning,1,,3.0
+graph_1,102,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/hedge shears_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_3,right,2.0,associative_learning,1,,3.0
+graph_1,103,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/leaf blower_a.png,node_1,stim/binder_b.png,node_5,left,1.0,associative_learning,1,,3.0
+graph_1,104,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_2,stim/guitar amplifier_b.png,node_5,left,2.0,associative_learning,1,,3.0
+graph_1,105,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/allen wrench_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_4,right,1.0,associative_learning,1,,3.0
+graph_1,106,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/binder_b.png,stim/television_b.png,node_6,stim/television_b.png,node_1,right,2.0,associative_learning,1,,3.0
+graph_1,107,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/leaf blower_a.png,stim/guitar amplifier_b.png,node_5,stim/leaf blower_a.png,node_2,left,2.0,associative_learning,1,,3.0
+graph_1,108,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/television_b.png,stim/guitar amplifier_b.png,node_6,stim/television_b.png,node_2,left,2.0,associative_learning,1,,3.0
+graph_1,109,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/leaf blower_a.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_5,right,3.0,associative_learning,1,,3.0
+graph_1,110,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/television_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_6,right,1.0,associative_learning,1,,3.0
+graph_1,111,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/leaf blower_a.png,stim/hedge shears_b.png,node_5,stim/leaf blower_a.png,node_3,left,1.0,associative_learning,1,,3.0
+graph_1,112,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,2.0,associative_learning,1,,3.0
+graph_1,113,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/binder_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_1,right,3.0,associative_learning,1,,3.0
+graph_1,114,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/television_b.png,node_2,stim/guitar amplifier_b.png,node_6,left,1.0,associative_learning,1,,3.0
+graph_1,115,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,1.0,associative_learning,1,,3.0
+graph_1,116,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/guitar amplifier_b.png,stim/television_b.png,node_2,stim/guitar amplifier_b.png,node_6,left,2.0,associative_learning,1,,3.0
+graph_1,117,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/hedge shears_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_3,right,1.0,associative_learning,1,,3.0
+graph_1,118,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_4,stim/allen wrench_b.png,node_2,left,1.0,associative_learning,1,,3.0
+graph_1,119,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/leaf blower_a.png,stim/binder_b.png,node_1,stim/binder_b.png,node_5,right,1.0,associative_learning,1,,3.0
+graph_1,120,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/hedge shears_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_3,right,1.0,associative_learning,1,,3.0
+graph_1,121,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/guitar amplifier_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_2,right,2.0,associative_learning,1,,3.0
+graph_1,122,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/television_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_6,right,2.0,associative_learning,1,,3.0
+graph_1,123,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,1.0,associative_learning,1,,3.0
+graph_1,124,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_4,right,1.0,associative_learning,1,,3.0
+graph_1,125,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/allen wrench_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_4,right,1.0,associative_learning,1,,3.0
+graph_1,126,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/allen wrench_b.png,stim/leaf blower_a.png,node_4,stim/allen wrench_b.png,node_5,left,2.0,associative_learning,1,,3.0
+graph_1,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,1,,3.0
+graph_1,127,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/binder_b.png,stim/television_b.png,node_1,stim/binder_b.png,node_6,left,2.0,associative_learning,1,,4.0
+graph_1,128,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_4,right,2.0,associative_learning,1,,4.0
+graph_1,129,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/hedge shears_b.png,stim/binder_b.png,node_3,stim/hedge shears_b.png,node_1,left,1.0,associative_learning,1,,4.0
+graph_1,130,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_2,stim/guitar amplifier_b.png,node_5,left,2.0,associative_learning,1,,4.0
+graph_1,131,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/hedge shears_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_3,right,1.0,associative_learning,1,,4.0
+graph_1,132,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_2,right,1.0,associative_learning,1,,4.0
+graph_1,133,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/guitar amplifier_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_2,right,2.0,associative_learning,1,,4.0
+graph_1,134,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/allen wrench_b.png,stim/television_b.png,node_4,stim/allen wrench_b.png,node_6,left,2.0,associative_learning,1,,4.0
+graph_1,135,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,1,,4.0
+graph_1,136,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/guitar amplifier_b.png,stim/hedge shears_b.png,node_2,stim/guitar amplifier_b.png,node_3,left,2.0,associative_learning,1,,4.0
+graph_1,137,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/allen wrench_b.png,node_1,stim/binder_b.png,node_4,left,1.0,associative_learning,1,,4.0
+graph_1,138,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/leaf blower_a.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_5,right,2.0,associative_learning,1,,4.0
+graph_1,139,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,1,,4.0
+graph_1,140,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,2.0,associative_learning,1,,4.0
+graph_1,141,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/guitar amplifier_b.png,node_3,stim/hedge shears_b.png,node_2,left,2.0,associative_learning,1,,4.0
+graph_1,142,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/leaf blower_a.png,stim/television_b.png,node_6,stim/television_b.png,node_5,right,2.0,associative_learning,1,,4.0
+graph_1,143,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/allen wrench_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_4,right,3.0,associative_learning,1,,4.0
+graph_1,144,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/binder_b.png,stim/television_b.png,node_6,stim/television_b.png,node_1,right,2.0,associative_learning,1,,4.0
+graph_1,145,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/hedge shears_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_3,right,1.0,associative_learning,1,,4.0
+graph_1,146,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/television_b.png,node_4,stim/allen wrench_b.png,node_6,left,1.0,associative_learning,1,,4.0
+graph_1,147,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_2,right,2.0,associative_learning,1,,4.0
+graph_1,148,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/hedge shears_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_3,right,2.0,associative_learning,1,,4.0
+graph_1,149,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/television_b.png,node_1,stim/binder_b.png,node_6,left,1.0,associative_learning,1,,4.0
+graph_1,150,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/leaf blower_a.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_5,right,2.0,associative_learning,1,,4.0
+graph_1,151,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/hedge shears_b.png,stim/leaf blower_a.png,node_3,stim/hedge shears_b.png,node_5,left,1.0,associative_learning,1,,4.0
+graph_1,152,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/television_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_6,right,2.0,associative_learning,1,,4.0
+graph_1,153,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/allen wrench_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_4,right,1.0,associative_learning,1,,4.0
+graph_1,154,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_2,right,2.0,associative_learning,1,,4.0
+graph_1,155,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/binder_b.png,stim/hedge shears_b.png,node_1,stim/binder_b.png,node_3,left,3.0,associative_learning,1,,4.0
+graph_1,156,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_2,stim/guitar amplifier_b.png,node_4,left,2.0,associative_learning,1,,4.0
+graph_1,157,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/leaf blower_a.png,node_1,stim/binder_b.png,node_5,left,1.0,associative_learning,1,,4.0
+graph_1,158,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/allen wrench_b.png,stim/hedge shears_b.png,node_4,stim/allen wrench_b.png,node_3,left,1.0,associative_learning,1,,4.0
+graph_1,159,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,1.0,associative_learning,1,,4.0
+graph_1,160,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/television_b.png,stim/guitar amplifier_b.png,node_6,stim/television_b.png,node_2,left,2.0,associative_learning,1,,4.0
+graph_1,161,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,3.0,associative_learning,1,,4.0
+graph_1,162,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/television_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_6,right,1.0,associative_learning,1,,4.0
+graph_1,163,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,1,,4.0
+graph_1,164,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/hedge shears_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_3,right,2.0,associative_learning,1,,4.0
+graph_1,165,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/allen wrench_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_4,right,1.0,associative_learning,1,,4.0
+graph_1,166,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/leaf blower_a.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_5,right,1.0,associative_learning,1,,4.0
+graph_1,167,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/television_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_6,right,2.0,associative_learning,1,,4.0
+graph_1,168,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_2,right,1.0,associative_learning,1,,4.0
+graph_1,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,1,,4.0
+graph_1,0,instruction,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,2,"In the next section, you will continue answering questions about the relationships between objects.",1.0
+graph_1,1,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/hedge shears_b.png,stim/allen wrench_b.png,node_3,stim/hedge shears_b.png,node_4,left,1.0,associative_learning,2,,1.0
+graph_1,2,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/guitar amplifier_b.png,stim/binder_b.png,node_2,stim/guitar amplifier_b.png,node_1,left,2.0,associative_learning,2,,1.0
+graph_1,3,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/leaf blower_a.png,stim/hedge shears_b.png,node_5,stim/leaf blower_a.png,node_3,left,1.0,associative_learning,2,,1.0
+graph_1,4,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_4,stim/allen wrench_b.png,node_2,left,1.0,associative_learning,2,,1.0
+graph_1,5,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/leaf blower_a.png,stim/television_b.png,node_5,stim/leaf blower_a.png,node_6,left,2.0,associative_learning,2,,1.0
+graph_1,6,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/television_b.png,stim/allen wrench_b.png,node_6,stim/television_b.png,node_4,left,2.0,associative_learning,2,,1.0
+graph_1,7,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/hedge shears_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_3,right,3.0,associative_learning,2,,1.0
+graph_1,8,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/binder_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_1,right,2.0,associative_learning,2,,1.0
+graph_1,9,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/leaf blower_a.png,stim/binder_b.png,node_1,stim/binder_b.png,node_5,right,1.0,associative_learning,2,,1.0
+graph_1,10,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/television_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_6,right,2.0,associative_learning,2,,1.0
+graph_1,11,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/leaf blower_a.png,node_1,stim/binder_b.png,node_5,left,1.0,associative_learning,2,,1.0
+graph_1,12,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/leaf blower_a.png,node_2,stim/guitar amplifier_b.png,node_5,left,2.0,associative_learning,2,,1.0
+graph_1,13,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/allen wrench_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_4,right,1.0,associative_learning,2,,1.0
+graph_1,14,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/guitar amplifier_b.png,stim/television_b.png,node_2,stim/guitar amplifier_b.png,node_6,left,2.0,associative_learning,2,,1.0
+graph_1,15,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/leaf blower_a.png,stim/hedge shears_b.png,node_5,stim/leaf blower_a.png,node_3,left,1.0,associative_learning,2,,1.0
+graph_1,16,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_4,stim/allen wrench_b.png,node_2,left,1.0,associative_learning,2,,1.0
+graph_1,17,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/guitar amplifier_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_2,right,2.0,associative_learning,2,,1.0
+graph_1,18,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_4,stim/allen wrench_b.png,node_2,left,1.0,associative_learning,2,,1.0
+graph_1,19,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,2,,1.0
+graph_1,20,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/guitar amplifier_b.png,stim/allen wrench_b.png,node_2,stim/guitar amplifier_b.png,node_4,left,2.0,associative_learning,2,,1.0
+graph_1,21,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/television_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_6,right,1.0,associative_learning,2,,1.0
+graph_1,22,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/binder_b.png,stim/television_b.png,node_6,stim/television_b.png,node_1,right,2.0,associative_learning,2,,1.0
+graph_1,23,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/leaf blower_a.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_5,right,1.0,associative_learning,2,,1.0
+graph_1,24,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/allen wrench_b.png,stim/television_b.png,node_6,stim/television_b.png,node_4,right,2.0,associative_learning,2,,1.0
+graph_1,25,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/hedge shears_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_3,right,1.0,associative_learning,2,,1.0
+graph_1,26,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Datton,west,stim/allen wrench_b.png,stim/binder_b.png,node_4,stim/allen wrench_b.png,node_1,left,2.0,associative_learning,2,,1.0
+graph_1,27,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Zoder,north,stim/hedge shears_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_3,right,2.0,associative_learning,2,,1.0
+graph_1,28,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Kleeg,east,stim/television_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_6,right,2.0,associative_learning,2,,1.0
+graph_1,29,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Kleeg,east,stim/hedge shears_b.png,stim/leaf blower_a.png,node_3,stim/hedge shears_b.png,node_5,left,1.0,associative_learning,2,,1.0
+graph_1,30,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/guitar amplifier_b.png,stim/television_b.png,node_6,stim/television_b.png,node_2,right,1.0,associative_learning,2,,1.0
+graph_1,31,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/allen wrench_b.png,node_3,stim/hedge shears_b.png,node_4,left,3.0,associative_learning,2,,1.0
+graph_1,32,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Tane,south,stim/guitar amplifier_b.png,stim/television_b.png,node_6,stim/television_b.png,node_2,right,2.0,associative_learning,2,,1.0
+graph_1,33,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Datton,west,stim/leaf blower_a.png,stim/binder_b.png,node_5,stim/leaf blower_a.png,node_1,left,3.0,associative_learning,2,,1.0
+graph_1,34,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/guitar amplifier_b.png,stim/hedge shears_b.png,node_2,stim/guitar amplifier_b.png,node_3,left,2.0,associative_learning,2,,1.0
+graph_1,35,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/binder_b.png,stim/leaf blower_a.png,node_1,stim/binder_b.png,node_5,left,1.0,associative_learning,2,,1.0
+graph_1,36,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/television_b.png,stim/allen wrench_b.png,node_4,stim/allen wrench_b.png,node_6,right,3.0,associative_learning,2,,1.0
+graph_1,37,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/binder_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_1,right,1.0,associative_learning,2,,1.0
+graph_1,38,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/television_b.png,stim/guitar amplifier_b.png,node_6,stim/television_b.png,node_2,left,2.0,associative_learning,2,,1.0
+graph_1,39,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/hedge shears_b.png,stim/allen wrench_b.png,node_3,stim/hedge shears_b.png,node_4,left,2.0,associative_learning,2,,1.0
+graph_1,40,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/leaf blower_a.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_5,right,2.0,associative_learning,2,,1.0
+graph_1,41,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Datton,west,stim/television_b.png,stim/binder_b.png,node_1,stim/binder_b.png,node_6,right,1.0,associative_learning,2,,1.0
+graph_1,42,prediction,n/a,n/a,n/a,n/a,stim/binder_b.png,node_1,Tane,south,stim/allen wrench_b.png,stim/hedge shears_b.png,node_4,stim/allen wrench_b.png,node_3,left,2.0,associative_learning,2,,1.0
+graph_1,43,prediction,n/a,n/a,n/a,n/a,stim/allen wrench_b.png,node_4,Kleeg,east,stim/television_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_6,right,1.0,associative_learning,2,,1.0
+graph_1,44,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Kleeg,east,stim/hedge shears_b.png,stim/television_b.png,node_6,stim/television_b.png,node_3,right,2.0,associative_learning,2,,1.0
+graph_1,45,prediction,n/a,n/a,n/a,n/a,stim/television_b.png,node_6,Zoder,north,stim/binder_b.png,stim/hedge shears_b.png,node_3,stim/hedge shears_b.png,node_1,right,3.0,associative_learning,2,,1.0
+graph_1,46,prediction,n/a,n/a,n/a,n/a,stim/hedge shears_b.png,node_3,Datton,west,stim/allen wrench_b.png,stim/guitar amplifier_b.png,node_2,stim/guitar amplifier_b.png,node_4,right,2.0,associative_learning,2,,1.0
+graph_1,47,prediction,n/a,n/a,n/a,n/a,stim/guitar amplifier_b.png,node_2,Tane,south,stim/allen wrench_b.png,stim/leaf blower_a.png,node_5,stim/leaf blower_a.png,node_4,right,1.0,associative_learning,2,,1.0
+graph_1,48,prediction,n/a,n/a,n/a,n/a,stim/leaf blower_a.png,node_5,Zoder,north,stim/guitar amplifier_b.png,stim/binder_b.png,node_2,stim/guitar amplifier_b.png,node_1,left,2.0,associative_learning,2,,1.0
+graph_1,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,2,,1.0
+graph_2,0,instruction,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,3,"You will see the same relationship words as before, but now they will be describing relationships between new objects.",1.0
+graph_2,1,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_5,right,2.0,associative_learning,3,,1.0
+graph_2,2,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/flashlight_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_6,right,1.0,associative_learning,3,,1.0
+graph_2,3,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/pretzel_a.png,node_6,stim/flashlight_b.png,node_4,left,2.0,associative_learning,3,,1.0
+graph_2,4,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/tennis ball_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_1,right,3.0,associative_learning,3,,1.0
+graph_2,5,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/broom_b.png,node_4,stim/pretzel_a.png,node_3,left,2.0,associative_learning,3,,1.0
+graph_2,6,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_5,stim/gravy boat_a.png,node_2,left,2.0,associative_learning,3,,1.0
+graph_2,7,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/tennis ball_a.png,node_6,stim/flashlight_b.png,node_1,left,2.0,associative_learning,3,,1.0
+graph_2,8,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/broom_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_3,right,2.0,associative_learning,3,,1.0
+graph_2,9,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/flashlight_b.png,node_2,stim/circular saw blade_b.png,node_6,left,1.0,associative_learning,3,,1.0
+graph_2,10,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/pretzel_a.png,node_1,stim/tennis ball_a.png,node_4,left,1.0,associative_learning,3,,1.0
+graph_2,11,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/gravy boat_a.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_5,right,1.0,associative_learning,3,,1.0
+graph_2,12,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_2,right,2.0,associative_learning,3,,1.0
+graph_2,13,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/flashlight_b.png,node_4,stim/pretzel_a.png,node_6,left,1.0,associative_learning,3,,1.0
+graph_2,14,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,stim/broom_b.png,node_1,stim/tennis ball_a.png,node_3,left,2.0,associative_learning,3,,1.0
+graph_2,15,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/gravy boat_a.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_5,right,1.0,associative_learning,3,,1.0
+graph_2,16,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_5,stim/gravy boat_a.png,node_2,left,1.0,associative_learning,3,,1.0
+graph_2,17,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,2.0,associative_learning,3,,1.0
+graph_2,18,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/tennis ball_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_1,right,1.0,associative_learning,3,,1.0
+graph_2,19,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/broom_b.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_3,right,2.0,associative_learning,3,,1.0
+graph_2,20,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/pretzel_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_4,right,1.0,associative_learning,3,,1.0
+graph_2,21,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,2.0,associative_learning,3,,1.0
+graph_2,22,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/tennis ball_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_1,right,3.0,associative_learning,3,,1.0
+graph_2,23,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/flashlight_b.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_6,right,2.0,associative_learning,3,,1.0
+graph_2,24,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/gravy boat_a.png,node_3,stim/broom_b.png,node_5,left,1.0,associative_learning,3,,1.0
+graph_2,25,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,stim/gravy boat_a.png,node_6,stim/flashlight_b.png,node_5,left,2.0,associative_learning,3,,1.0
+graph_2,26,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/circular saw blade_b.png,node_3,stim/broom_b.png,node_2,left,3.0,associative_learning,3,,1.0
+graph_2,27,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/tennis ball_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_1,right,2.0,associative_learning,3,,1.0
+graph_2,28,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/broom_b.png,node_1,stim/tennis ball_a.png,node_3,left,1.0,associative_learning,3,,1.0
+graph_2,29,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,1.0,associative_learning,3,,1.0
+graph_2,30,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/flashlight_b.png,node_3,stim/broom_b.png,node_6,left,2.0,associative_learning,3,,1.0
+graph_2,31,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/pretzel_a.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_4,right,2.0,associative_learning,3,,1.0
+graph_2,32,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,3.0,associative_learning,3,,1.0
+graph_2,33,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/broom_b.png,node_4,stim/pretzel_a.png,node_3,left,2.0,associative_learning,3,,1.0
+graph_2,34,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/flashlight_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_6,right,2.0,associative_learning,3,,1.0
+graph_2,35,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/gravy boat_a.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_5,right,1.0,associative_learning,3,,1.0
+graph_2,36,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/circular saw blade_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_2,right,2.0,associative_learning,3,,1.0
+graph_2,37,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/broom_b.png,node_4,stim/pretzel_a.png,node_3,left,2.0,associative_learning,3,,1.0
+graph_2,38,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,stim/gravy boat_a.png,node_1,stim/tennis ball_a.png,node_5,left,2.0,associative_learning,3,,1.0
+graph_2,39,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,stim/flashlight_b.png,node_2,stim/circular saw blade_b.png,node_6,left,1.0,associative_learning,3,,1.0
+graph_2,40,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/tennis ball_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_1,right,1.0,associative_learning,3,,1.0
+graph_2,41,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,stim/circular saw blade_b.png,node_6,stim/flashlight_b.png,node_2,left,1.0,associative_learning,3,,1.0
+graph_2,42,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/pretzel_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_4,right,2.0,associative_learning,3,,1.0
+graph_2,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,3,,1.0
+graph_2,43,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/broom_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_3,right,2.0,associative_learning,3,,2.0
+graph_2,44,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_5,stim/gravy boat_a.png,node_2,left,3.0,associative_learning,3,,2.0
+graph_2,45,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/flashlight_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_6,right,2.0,associative_learning,3,,2.0
+graph_2,46,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,1.0,associative_learning,3,,2.0
+graph_2,47,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/pretzel_a.png,node_2,stim/circular saw blade_b.png,node_4,left,1.0,associative_learning,3,,2.0
+graph_2,48,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/gravy boat_a.png,node_3,stim/broom_b.png,node_5,left,1.0,associative_learning,3,,2.0
+graph_2,49,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,2.0,associative_learning,3,,2.0
+graph_2,50,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/pretzel_a.png,node_3,stim/broom_b.png,node_4,left,3.0,associative_learning,3,,2.0
+graph_2,51,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/gravy boat_a.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_5,right,2.0,associative_learning,3,,2.0
+graph_2,52,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/broom_b.png,node_5,stim/gravy boat_a.png,node_3,left,3.0,associative_learning,3,,2.0
+graph_2,53,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/flashlight_b.png,node_4,stim/pretzel_a.png,node_6,left,2.0,associative_learning,3,,2.0
+graph_2,54,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,stim/broom_b.png,node_1,stim/tennis ball_a.png,node_3,left,2.0,associative_learning,3,,2.0
+graph_2,55,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/flashlight_b.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_6,right,2.0,associative_learning,3,,2.0
+graph_2,56,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/pretzel_a.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_4,right,1.0,associative_learning,3,,2.0
+graph_2,57,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,stim/gravy boat_a.png,node_2,stim/circular saw blade_b.png,node_5,left,2.0,associative_learning,3,,2.0
+graph_2,58,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/broom_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_3,right,1.0,associative_learning,3,,2.0
+graph_2,59,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/circular saw blade_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_2,right,1.0,associative_learning,3,,2.0
+graph_2,60,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,1.0,associative_learning,3,,2.0
+graph_2,61,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_2,stim/circular saw blade_b.png,node_1,left,2.0,associative_learning,3,,2.0
+graph_2,62,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/flashlight_b.png,stim/broom_b.png,node_3,stim/broom_b.png,node_6,right,1.0,associative_learning,3,,2.0
+graph_2,63,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,2.0,associative_learning,3,,2.0
+graph_2,64,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/gravy boat_a.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_5,right,1.0,associative_learning,3,,2.0
+graph_2,65,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/circular saw blade_b.png,node_4,stim/pretzel_a.png,node_2,left,1.0,associative_learning,3,,2.0
+graph_2,66,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,stim/gravy boat_a.png,node_1,stim/tennis ball_a.png,node_5,left,2.0,associative_learning,3,,2.0
+graph_2,67,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/broom_b.png,node_4,stim/pretzel_a.png,node_3,left,1.0,associative_learning,3,,2.0
+graph_2,68,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,1.0,associative_learning,3,,2.0
+graph_2,69,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/pretzel_a.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_4,right,2.0,associative_learning,3,,2.0
+graph_2,70,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_5,stim/gravy boat_a.png,node_2,left,3.0,associative_learning,3,,2.0
+graph_2,71,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/tennis ball_a.png,node_4,stim/pretzel_a.png,node_1,left,2.0,associative_learning,3,,2.0
+graph_2,72,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/flashlight_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_6,right,2.0,associative_learning,3,,2.0
+graph_2,73,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,2.0,associative_learning,3,,2.0
+graph_2,74,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/tennis ball_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_1,right,1.0,associative_learning,3,,2.0
+graph_2,75,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/flashlight_b.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_6,right,2.0,associative_learning,3,,2.0
+graph_2,76,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/gravy boat_a.png,node_3,stim/broom_b.png,node_5,left,1.0,associative_learning,3,,2.0
+graph_2,77,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,1.0,associative_learning,3,,2.0
+graph_2,78,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/gravy boat_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_5,right,3.0,associative_learning,3,,2.0
+graph_2,79,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_2,stim/circular saw blade_b.png,node_1,left,2.0,associative_learning,3,,2.0
+graph_2,80,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/broom_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_3,right,1.0,associative_learning,3,,2.0
+graph_2,81,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/flashlight_b.png,node_2,stim/circular saw blade_b.png,node_6,left,2.0,associative_learning,3,,2.0
+graph_2,82,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/broom_b.png,node_1,stim/tennis ball_a.png,node_3,left,1.0,associative_learning,3,,2.0
+graph_2,83,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/circular saw blade_b.png,node_4,stim/pretzel_a.png,node_2,left,1.0,associative_learning,3,,2.0
+graph_2,84,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,stim/gravy boat_a.png,node_1,stim/tennis ball_a.png,node_5,left,2.0,associative_learning,3,,2.0
+graph_2,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,3,,2.0
+graph_2,85,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,1.0,associative_learning,3,,3.0
+graph_2,86,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/flashlight_b.png,node_1,stim/tennis ball_a.png,node_6,left,1.0,associative_learning,3,,3.0
+graph_2,87,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/broom_b.png,node_4,stim/pretzel_a.png,node_3,left,1.0,associative_learning,3,,3.0
+graph_2,88,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/tennis ball_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_1,right,1.0,associative_learning,3,,3.0
+graph_2,89,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/circular saw blade_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_2,right,1.0,associative_learning,3,,3.0
+graph_2,90,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/gravy boat_a.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_5,right,2.0,associative_learning,3,,3.0
+graph_2,91,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,1.0,associative_learning,3,,3.0
+graph_2,92,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/broom_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_3,right,1.0,associative_learning,3,,3.0
+graph_2,93,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/tennis ball_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_1,right,2.0,associative_learning,3,,3.0
+graph_2,94,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,stim/pretzel_a.png,node_5,stim/gravy boat_a.png,node_4,left,2.0,associative_learning,3,,3.0
+graph_2,95,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/circular saw blade_b.png,node_6,stim/flashlight_b.png,node_2,left,1.0,associative_learning,3,,3.0
+graph_2,96,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/circular saw blade_b.png,node_3,stim/broom_b.png,node_2,left,3.0,associative_learning,3,,3.0
+graph_2,97,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,stim/pretzel_a.png,node_6,stim/flashlight_b.png,node_4,left,2.0,associative_learning,3,,3.0
+graph_2,98,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/broom_b.png,node_5,stim/gravy boat_a.png,node_3,left,3.0,associative_learning,3,,3.0
+graph_2,99,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/flashlight_b.png,node_2,stim/circular saw blade_b.png,node_6,left,1.0,associative_learning,3,,3.0
+graph_2,100,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/flashlight_b.png,node_1,stim/tennis ball_a.png,node_6,left,1.0,associative_learning,3,,3.0
+graph_2,101,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,stim/gravy boat_a.png,node_2,stim/circular saw blade_b.png,node_5,left,2.0,associative_learning,3,,3.0
+graph_2,102,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/tennis ball_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_1,right,1.0,associative_learning,3,,3.0
+graph_2,103,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,stim/circular saw blade_b.png,node_6,stim/flashlight_b.png,node_2,left,2.0,associative_learning,3,,3.0
+graph_2,104,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/pretzel_a.png,node_3,stim/broom_b.png,node_4,left,3.0,associative_learning,3,,3.0
+graph_2,105,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/tennis ball_a.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_1,right,2.0,associative_learning,3,,3.0
+graph_2,106,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/gravy boat_a.png,node_3,stim/broom_b.png,node_5,left,1.0,associative_learning,3,,3.0
+graph_2,107,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,stim/flashlight_b.png,node_2,stim/circular saw blade_b.png,node_6,left,1.0,associative_learning,3,,3.0
+graph_2,108,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,stim/broom_b.png,node_5,stim/gravy boat_a.png,node_3,left,1.0,associative_learning,3,,3.0
+graph_2,109,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/pretzel_a.png,node_6,stim/flashlight_b.png,node_4,left,2.0,associative_learning,3,,3.0
+graph_2,110,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/circular saw blade_b.png,stim/broom_b.png,node_3,stim/broom_b.png,node_2,right,3.0,associative_learning,3,,3.0
+graph_2,111,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/gravy boat_a.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_5,right,2.0,associative_learning,3,,3.0
+graph_2,112,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/tennis ball_a.png,node_3,stim/broom_b.png,node_1,left,3.0,associative_learning,3,,3.0
+graph_2,113,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/flashlight_b.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_6,right,1.0,associative_learning,3,,3.0
+graph_2,114,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,stim/broom_b.png,node_5,stim/gravy boat_a.png,node_3,left,1.0,associative_learning,3,,3.0
+graph_2,115,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/flashlight_b.png,node_4,stim/pretzel_a.png,node_6,left,2.0,associative_learning,3,,3.0
+graph_2,116,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/gravy boat_a.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_5,right,2.0,associative_learning,3,,3.0
+graph_2,117,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/circular saw blade_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_2,right,1.0,associative_learning,3,,3.0
+graph_2,118,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/broom_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_3,right,1.0,associative_learning,3,,3.0
+graph_2,119,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_2,stim/circular saw blade_b.png,node_1,left,2.0,associative_learning,3,,3.0
+graph_2,120,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/pretzel_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_4,right,2.0,associative_learning,3,,3.0
+graph_2,121,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,stim/tennis ball_a.png,node_6,stim/flashlight_b.png,node_1,left,2.0,associative_learning,3,,3.0
+graph_2,122,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/circular saw blade_b.png,stim/broom_b.png,node_3,stim/broom_b.png,node_2,right,2.0,associative_learning,3,,3.0
+graph_2,123,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_5,right,2.0,associative_learning,3,,3.0
+graph_2,124,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,stim/pretzel_a.png,node_5,stim/gravy boat_a.png,node_4,left,1.0,associative_learning,3,,3.0
+graph_2,125,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/flashlight_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_6,right,2.0,associative_learning,3,,3.0
+graph_2,126,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/broom_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_3,right,3.0,associative_learning,3,,3.0
+graph_2,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,3,,3.0
+graph_2,127,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/broom_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_3,right,2.0,associative_learning,3,,4.0
+graph_2,128,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,stim/gravy boat_a.png,node_1,stim/tennis ball_a.png,node_5,left,2.0,associative_learning,3,,4.0
+graph_2,129,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/circular saw blade_b.png,node_4,stim/pretzel_a.png,node_2,left,1.0,associative_learning,3,,4.0
+graph_2,130,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/flashlight_b.png,node_5,stim/gravy boat_a.png,node_6,left,1.0,associative_learning,3,,4.0
+graph_2,131,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/tennis ball_a.png,node_6,stim/flashlight_b.png,node_1,left,2.0,associative_learning,3,,4.0
+graph_2,132,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/pretzel_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_4,right,2.0,associative_learning,3,,4.0
+graph_2,133,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/tennis ball_a.png,node_4,stim/pretzel_a.png,node_1,left,2.0,associative_learning,3,,4.0
+graph_2,134,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_2,right,2.0,associative_learning,3,,4.0
+graph_2,135,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/gravy boat_a.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_5,right,2.0,associative_learning,3,,4.0
+graph_2,136,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/broom_b.png,node_5,stim/gravy boat_a.png,node_3,left,2.0,associative_learning,3,,4.0
+graph_2,137,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/flashlight_b.png,node_4,stim/pretzel_a.png,node_6,left,1.0,associative_learning,3,,4.0
+graph_2,138,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/flashlight_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_6,right,1.0,associative_learning,3,,4.0
+graph_2,139,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,1.0,associative_learning,3,,4.0
+graph_2,140,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/gravy boat_a.png,node_3,stim/broom_b.png,node_5,left,1.0,associative_learning,3,,4.0
+graph_2,141,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,stim/pretzel_a.png,node_2,stim/circular saw blade_b.png,node_4,left,2.0,associative_learning,3,,4.0
+graph_2,142,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/broom_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_3,right,1.0,associative_learning,3,,4.0
+graph_2,143,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_5,right,2.0,associative_learning,3,,4.0
+graph_2,144,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/tennis ball_a.png,node_3,stim/broom_b.png,node_1,left,1.0,associative_learning,3,,4.0
+graph_2,145,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/tennis ball_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_1,right,2.0,associative_learning,3,,4.0
+graph_2,146,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/flashlight_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_6,right,1.0,associative_learning,3,,4.0
+graph_2,147,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,2.0,associative_learning,3,,4.0
+graph_2,148,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/pretzel_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_4,right,1.0,associative_learning,3,,4.0
+graph_2,149,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,stim/gravy boat_a.png,node_2,stim/circular saw blade_b.png,node_5,left,2.0,associative_learning,3,,4.0
+graph_2,150,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/broom_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_3,right,1.0,associative_learning,3,,4.0
+graph_2,151,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,stim/broom_b.png,node_2,stim/circular saw blade_b.png,node_3,left,2.0,associative_learning,3,,4.0
+graph_2,152,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/flashlight_b.png,node_1,stim/tennis ball_a.png,node_6,left,2.0,associative_learning,3,,4.0
+graph_2,153,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_5,right,2.0,associative_learning,3,,4.0
+graph_2,154,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,1.0,associative_learning,3,,4.0
+graph_2,155,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/circular saw blade_b.png,node_6,stim/flashlight_b.png,node_2,left,1.0,associative_learning,3,,4.0
+graph_2,156,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/circular saw blade_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_2,right,2.0,associative_learning,3,,4.0
+graph_2,157,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_2,stim/circular saw blade_b.png,node_1,left,2.0,associative_learning,3,,4.0
+graph_2,158,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,stim/broom_b.png,node_5,stim/gravy boat_a.png,node_3,left,1.0,associative_learning,3,,4.0
+graph_2,159,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,1.0,associative_learning,3,,4.0
+graph_2,160,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/pretzel_a.png,node_3,stim/broom_b.png,node_4,left,2.0,associative_learning,3,,4.0
+graph_2,161,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,1.0,associative_learning,3,,4.0
+graph_2,162,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/pretzel_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_4,right,3.0,associative_learning,3,,4.0
+graph_2,163,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/flashlight_b.png,node_2,stim/circular saw blade_b.png,node_6,left,1.0,associative_learning,3,,4.0
+graph_2,164,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/tennis ball_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_1,right,1.0,associative_learning,3,,4.0
+graph_2,165,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/broom_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_3,right,2.0,associative_learning,3,,4.0
+graph_2,166,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/circular saw blade_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_2,right,2.0,associative_learning,3,,4.0
+graph_2,167,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/broom_b.png,node_6,stim/flashlight_b.png,node_3,left,2.0,associative_learning,3,,4.0
+graph_2,168,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/gravy boat_a.png,node_3,stim/broom_b.png,node_5,left,1.0,associative_learning,3,,4.0
+graph_2,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,3,,4.0
+graph_2,0,instruction,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,4,"In the next section, you will now answer questions that involve either one or two relationships.",1.0
+graph_2,1,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,stim/gravy boat_a.png,node_6,stim/flashlight_b.png,node_5,left,2.0,associative_learning,4,,1.0
+graph_2,2,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_5,stim/gravy boat_a.png,node_2,left,3.0,associative_learning,4,,1.0
+graph_2,3,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/pretzel_a.png,node_2,stim/circular saw blade_b.png,node_4,left,2.0,associative_learning,4,,1.0
+graph_2,4,integration,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,stim/broom_b.png,node_2,stim/circular saw blade_b.png,node_3,left,2.0,associative_learning,4,,1.0
+graph_2,5,integration,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_2,stim/circular saw blade_b.png,node_1,left,2.0,associative_learning,4,,1.0
+graph_2,6,integration,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,node_3,Tane,south,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,2.0,associative_learning,4,,1.0
+graph_2,7,integration,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,stim/flashlight_b.png,node_2,stim/circular saw blade_b.png,node_6,left,1.0,associative_learning,4,,1.0
+graph_2,8,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/tennis ball_a.png,node_3,stim/broom_b.png,node_1,left,1.0,associative_learning,4,,1.0
+graph_2,9,integration,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,node_6,Zoder,north,stim/gravy boat_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_5,right,2.0,associative_learning,4,,1.0
+graph_2,10,integration,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/flashlight_b.png,stim/broom_b.png,node_3,stim/broom_b.png,node_6,right,2.0,associative_learning,4,,1.0
+graph_2,11,integration,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,node_2,Tane,south,stim/broom_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_3,right,1.0,associative_learning,4,,1.0
+graph_2,12,integration,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,node_4,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_2,right,2.0,associative_learning,4,,1.0
+graph_2,13,integration,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,1.0,associative_learning,4,,1.0
+graph_2,14,integration,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/flashlight_b.png,node_5,stim/gravy boat_a.png,node_6,left,2.0,associative_learning,4,,1.0
+graph_2,15,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Datton,west,stim/broom_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_3,right,2.0,associative_learning,4,,1.0
+graph_2,16,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,stim/gravy boat_a.png,node_1,stim/tennis ball_a.png,node_5,left,1.0,associative_learning,4,,1.0
+graph_2,17,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Kleeg,east,stim/pretzel_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_4,right,1.0,associative_learning,4,,1.0
+graph_2,18,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Tane,south,stim/pretzel_a.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_4,right,2.0,associative_learning,4,,1.0
+graph_2,19,integration,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/tennis ball_a.png,node_3,stim/broom_b.png,node_1,left,3.0,associative_learning,4,,1.0
+graph_2,20,prediction,n/a,n/a,n/a,n/a,stim/broom_b.png,node_3,Datton,west,stim/flashlight_b.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_6,right,2.0,associative_learning,4,,1.0
+graph_2,21,integration,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,node_5,Datton,west,stim/circular saw blade_b.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_2,right,2.0,associative_learning,4,,1.0
+graph_2,22,integration,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,node_5,Kleeg,east,stim/pretzel_a.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_4,right,2.0,associative_learning,4,,1.0
+graph_2,23,integration,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,node_3,Datton,west,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_5,right,2.0,associative_learning,4,,1.0
+graph_2,24,integration,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/broom_b.png,node_4,stim/pretzel_a.png,node_3,left,2.0,associative_learning,4,,1.0
+graph_2,25,integration,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,node_5,Zoder,north,stim/tennis ball_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_1,right,2.0,associative_learning,4,,1.0
+graph_2,26,integration,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,node_5,Kleeg,east,stim/pretzel_a.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_4,right,2.0,associative_learning,4,,1.0
+graph_2,27,integration,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,node_3,Tane,south,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,2.0,associative_learning,4,,1.0
+graph_2,28,integration,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,stim/broom_b.png,node_6,stim/flashlight_b.png,node_3,left,2.0,associative_learning,4,,1.0
+graph_2,29,integration,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/flashlight_b.png,node_4,stim/pretzel_a.png,node_6,left,1.0,associative_learning,4,,1.0
+graph_2,30,integration,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,node_1,Kleeg,east,stim/gravy boat_a.png,stim/circular saw blade_b.png,node_2,stim/circular saw blade_b.png,node_5,right,2.0,associative_learning,4,,1.0
+graph_2,31,integration,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,stim/pretzel_a.png,node_2,stim/circular saw blade_b.png,node_4,left,2.0,associative_learning,4,,1.0
+graph_2,32,prediction,n/a,n/a,n/a,n/a,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/gravy boat_a.png,node_1,stim/tennis ball_a.png,node_5,left,1.0,associative_learning,4,,1.0
+graph_2,33,integration,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/broom_b.png,stim/tennis ball_a.png,node_3,stim/broom_b.png,node_1,left,1.0,associative_learning,4,,1.0
+graph_2,34,integration,stim/broom_b.png,node_3,Datton,west,stim/circular saw blade_b.png,node_2,Datton,west,stim/flashlight_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_6,right,1.0,associative_learning,4,,1.0
+graph_2,35,prediction,n/a,n/a,n/a,n/a,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,stim/circular saw blade_b.png,node_4,stim/pretzel_a.png,node_2,left,1.0,associative_learning,4,,1.0
+graph_2,36,integration,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,node_5,Datton,west,stim/pretzel_a.png,stim/broom_b.png,node_4,stim/pretzel_a.png,node_3,left,2.0,associative_learning,4,,1.0
+graph_2,37,integration,stim/pretzel_a.png,node_4,Zoder,north,stim/tennis ball_a.png,node_1,Tane,south,stim/gravy boat_a.png,stim/pretzel_a.png,node_4,stim/pretzel_a.png,node_5,right,1.0,associative_learning,4,,1.0
+graph_2,38,prediction,n/a,n/a,n/a,n/a,stim/pretzel_a.png,node_4,Kleeg,east,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,1.0,associative_learning,4,,1.0
+graph_2,39,integration,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,node_2,Kleeg,east,stim/pretzel_a.png,stim/broom_b.png,node_3,stim/broom_b.png,node_4,right,2.0,associative_learning,4,,1.0
+graph_2,40,integration,stim/broom_b.png,node_3,Tane,south,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/broom_b.png,node_5,stim/gravy boat_a.png,node_3,left,2.0,associative_learning,4,,1.0
+graph_2,41,integration,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,node_2,Tane,south,stim/gravy boat_a.png,stim/flashlight_b.png,node_5,stim/gravy boat_a.png,node_6,left,2.0,associative_learning,4,,1.0
+graph_2,42,integration,stim/gravy boat_a.png,node_5,Zoder,north,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/flashlight_b.png,node_1,stim/tennis ball_a.png,node_6,left,1.0,associative_learning,4,,1.0
+graph_2,43,integration,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,node_2,Datton,west,stim/tennis ball_a.png,stim/pretzel_a.png,node_1,stim/tennis ball_a.png,node_4,left,1.0,associative_learning,4,,1.0
+graph_2,44,integration,stim/tennis ball_a.png,node_1,Tane,south,stim/pretzel_a.png,node_4,Zoder,north,stim/circular saw blade_b.png,stim/tennis ball_a.png,node_1,stim/tennis ball_a.png,node_2,right,2.0,associative_learning,4,,1.0
+graph_2,45,integration,stim/tennis ball_a.png,node_1,Kleeg,east,stim/circular saw blade_b.png,node_2,Tane,south,stim/broom_b.png,stim/gravy boat_a.png,node_5,stim/gravy boat_a.png,node_3,right,1.0,associative_learning,4,,1.0
+graph_2,46,integration,stim/gravy boat_a.png,node_5,Kleeg,east,stim/flashlight_b.png,node_6,Datton,west,stim/gravy boat_a.png,stim/tennis ball_a.png,node_5,stim/gravy boat_a.png,node_1,left,3.0,associative_learning,4,,1.0
+graph_2,47,prediction,n/a,n/a,n/a,n/a,stim/gravy boat_a.png,node_5,Kleeg,east,stim/circular saw blade_b.png,stim/flashlight_b.png,node_6,stim/flashlight_b.png,node_2,right,1.0,associative_learning,4,,1.0
+graph_2,48,prediction,n/a,n/a,n/a,n/a,stim/flashlight_b.png,node_6,Zoder,north,stim/broom_b.png,stim/gravy boat_a.png,node_3,stim/broom_b.png,node_5,left,1.0,associative_learning,4,,1.0
+graph_2,0,performance_feedback,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,associative_learning,4,,1.0
