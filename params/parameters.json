@@ -1,13 +1,30 @@
 {
-    "has_static_action": True,
-    "n_actions":4,
+    "has_static_action": true,
+    "n_actions": 4,
+    "n_x": 45,
+    "n_x_c": 10,
+
     "loss_weights_x": 1,
     "loss_weights_p": 1,
     "loss_weights_g": 1,
     "loss_weights_reg_g": 0.01,
     "loss_weights_reg_p": 0.02,
-    "n_x": 45,
-    "n_x_c": 10,
+
     "lambda": 0.9999,
-    "eta": 0.5
+    "eta": 0.5,
+    "kappa": 0.8,
+    "eta_it": 200,
+    "lambda_it": 50,
+
+    "loss_weights_p_g_it": 50,
+    "loss_weights_reg_p_it": 100,
+    "loss_weights_reg_g_it": 40000000,
+
+    "p2g_sig_half_it": 10,
+    "p2g_sig_scale_it": 5,
+
+    "lr_max": 0.00094,
+    "lr_min": 0.00008,
+    "lr_decay_rate": 0.5,
+    "lr_decay_steps": 20000
 }
