@@ -117,7 +117,7 @@ def parameters():
 
     # ---- Neuron and module parameters
     # Neurons for subsampled entorhinal abstract location f_g(g) for each frequency module
-    params["n_g_subsampled"] = [10, 10, 8, 6, 6]
+    params["n_g_subsampled"] = [10, 10, 8]
     # Neurons for object vector cells. Neurons will get new modules if object vector cell modules are separated; otherwise, they are added to existing abstract location modules.
     # a) No additional modules, no additional object vector neurons (e.g. when not using shiny environments): [0 for _ in range(len(params['n_g_subsampled']))], and separate_ovc set to False
     # b) No additional modules, but n additional object vector neurons in each grid module: [n for _ in range(len(params['n_g_subsampled']))], and separate_ovc set to False
@@ -148,7 +148,7 @@ def parameters():
     # Neurons for hippocampal grounded location p for each frequency
     params["n_p"] = [g * x for g, x in zip(params["n_g_subsampled"], params["n_x_f"])]
     # Initial frequencies of each module. For ease of interpretation (higher number = higher frequency) this is 1 - the frequency as James uses it
-    params["f_initial"] = [0.99, 0.3, 0.09, 0.03, 0.01]
+    params["f_initial"] = [0.99, 0.3, 0.09]
     # Add frequencies of object vector cell modules, if object vector cells get separate modules
     params["f_initial"] = (
         params["f_initial"] + params["f_initial"][0 : params["n_f_ovc"]]
