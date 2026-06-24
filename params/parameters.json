@@ -10,7 +10,7 @@
     "loss_weights_reg_g": 0.01,
     "loss_weights_reg_p": 0.02,
 
-    "lambda": 0.9999,
+    "lambda": 0.99,
     "eta": 0.5,
     "kappa": 0.8,
     "eta_it": 200,
@@ -26,5 +26,5 @@
     "lr_max": 0.00094,
     "lr_min": 0.00008,
     "lr_decay_rate": 0.5,
-    "lr_decay_steps": 20000
+    "lr_decay_steps": 2000
 }
