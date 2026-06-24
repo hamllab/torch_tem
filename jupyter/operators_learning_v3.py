@@ -18,7 +18,7 @@ import pingouin as pg
 version = "v5"
 
 if socket.gethostname() == "submit":  # cluster
-    root_dir = Path("/home/uwm/linzan/torch_tem")
+    root_dir = Path("/home/uwm/linzan/Data_morton/linzan/torch_tem")
 else:  # local laptop
     root_dir = Path("~/PycharmProjects/torch_tem").expanduser()
 
