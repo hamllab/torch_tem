@@ -197,3 +197,4 @@ v5/design/**/*.pt
 events.out.tfevents.*
 src/.claude/settings.local.json
 v5/design/similarity/
+.DS_Store
