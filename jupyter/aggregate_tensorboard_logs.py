@@ -28,7 +28,7 @@ from tbparse import SummaryReader
 study_name = sys.argv[1]
 
 # Path is hardcoded to the cluster location, since this script only runs on the cluster
-root_dir = Path("/home/uwm/linzan/torch_tem")
+root_dir = Path("/home/uwm/linzan/Data_morton/linzan/torch_tem")
 version = "v5"
 base_dir = root_dir / "tem_simulation" / "operators" / version
 sim_dir = base_dir / "simulation"
