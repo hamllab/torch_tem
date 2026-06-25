@@ -11,15 +11,15 @@ import seaborn as sns
 from pathlib import Path
 from tbparse import SummaryReader
 from tem import world
-import socket
 import matplotlib.pyplot as plt
 import pingouin as pg
 
 version = "v5"
 
-if socket.gethostname() == "submit":  # cluster
-    root_dir = Path("/home/uwm/linzan/Data_morton/linzan/torch_tem")
-else:  # local laptop
+cluster_path = Path("/home/uwm/linzan/Data_morton/linzan/torch_tem")
+if cluster_path.exists():
+    root_dir = cluster_path
+else:
     root_dir = Path("~/PycharmProjects/torch_tem").expanduser()
 
 base_dir = root_dir / "tem_simulation" / "operators" / version
