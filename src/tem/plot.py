@@ -12,7 +12,9 @@ Created on Mon Mar 30 14:35:30 2020
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
-
+import polars as pl
+import seaborn as sns
+from pathlib import Path
 
 def plot_weights(models, params=None, steps=None, do_save=False):
     # If no parameter names specified: just take all of the trained ones from the model
@@ -437,6 +439,215 @@ def action_patch(location_from, location_to, radius, colour):
         )
     # Return action patch for provided data
     return plt.Polygon(np.stack([xdat, ydat], axis=1), color=colour)
+
+
+def load_grid_results(sim_dir, study_prefix="study-grid-", tag="Accuracies/g", peak_fraction=0.1):
+    """Load and combine aggregated parquet files from all grid search studies.
+
+    Reads each study folder matching study_prefix, parses lambda and eta from
+    the folder name, and returns a single combined dataframe with parameter
+    labels attached.
+
+    Parameters
+    ----------
+    sim_dir : Path
+        Path to the simulation directory containing study folders.
+    study_prefix : str
+        Prefix used to identify grid search study folders.
+    tag : str
+        TensorBoard tag to filter (e.g. "Accuracies/g" for structural accuracy).
+    peak_fraction : float
+        Fraction of total trials at the end of training used to compute peak
+        accuracy (e.g. 0.1 = last 10% of trials).
+
+    Returns
+    -------
+    df_curves : polars.DataFrame
+        Full trial-by-trial data for plotting learning curves, with columns:
+        Trial, value, Graph, condition, lambda_val, eta_val, param_label.
+    df_peaks : polars.DataFrame
+        One row per study with peak accuracy summary, with columns:
+        lambda_val, eta_val, Graph, condition, peak_accuracy.
+    """
+    sim_dir = Path(sim_dir)
+    curve_dfs = []
+    peak_rows = []
+
+    for study_dir in sorted(sim_dir.glob(f"{study_prefix}*")):
+        parquet_path = study_dir / "aggregated.parquet"
+        if not parquet_path.exists():
+            continue
+
+        # Parse lambda and eta from folder name, e.g. "study-grid-l0_99-e0_5"
+        # naming convention: underscores replace decimal points, so "l0_99" -> 0.99
+        name = study_dir.name.replace(study_prefix, "")
+        parts = name.split("-")
+        try:
+            lambda_str = [p for p in parts if p.startswith("l")][0][1:]
+            eta_str = [p for p in parts if p.startswith("e")][0][1:]
+            lambda_val = float(lambda_str.replace("_", "."))
+            eta_val = float(eta_str.replace("_", "."))
+        except (IndexError, ValueError):
+            continue
+
+        df = pl.read_parquet(parquet_path)
+        df = (
+            df.filter(pl.col("tag") == tag)
+            .with_columns(
+                pl.col("step").cum_count().over("subject", "run", "design").alias("Trial"),
+                pl.col("design").replace({"0": "Initial", "1": "Transfer"}).alias("Graph"),
+                pl.lit(lambda_val).alias("lambda_val"),
+                pl.lit(eta_val).alias("eta_val"),
+                pl.lit(f"λ={lambda_val}, η={eta_val}").alias("param_label"),
+            )
+        )
+        curve_dfs.append(df)
+
+        # Compute peak accuracy using last peak_fraction of trials
+        max_trial = df["Trial"].max()
+        trial_min = int(max_trial * (1 - peak_fraction))
+        peak = (
+            df.filter(pl.col("Trial") >= trial_min)
+            .group_by("Graph", "condition", "lambda_val", "eta_val")
+            .agg(pl.col("value").mean().alias("peak_accuracy"))
+        )
+        peak_rows.append(peak)
+
+    df_curves = pl.concat(curve_dfs) if curve_dfs else pl.DataFrame()
+    df_peaks = pl.concat(peak_rows) if peak_rows else pl.DataFrame()
+
+    return df_curves, df_peaks
+
+
+def plot_learning_curves(df_curves, graph="Transfer", condition=None,
+                         window_size=200, ax=None, do_save=False, save_path=None):
+    """Plot learning curves for multiple parameter combinations on one axis.
+
+    Each line represents one (lambda, eta) combination. Lines are averaged
+    across subjects and runs, with a shaded confidence interval.
+
+    Parameters
+    ----------
+    df_curves : polars.DataFrame
+        Output from load_grid_results().
+    graph : str
+        "Initial" or "Transfer" — which graph to plot.
+    condition : str or None
+        "PI", "AL", or None to plot both conditions together (averaged).
+    window_size : int
+        Rolling mean window for smoothing.
+    ax : matplotlib axis or None
+        Axis to plot on. Creates new figure if None.
+    do_save : bool
+        Whether to save the figure.
+    save_path : Path or None
+        Path to save the figure to if do_save is True.
+
+    Returns
+    -------
+    ax : matplotlib axis
+    """
+
+
+    filtered = df_curves.filter(pl.col("Graph") == graph)
+    if condition is not None:
+        filtered = filtered.filter(pl.col("condition") == condition)
+
+    # Apply rolling mean per subject/run/design/param combination
+    smoothed = filtered.with_columns(
+        pl.col("value")
+        .rolling_mean(window_size=window_size)
+        .over("subject", "run", "design", "param_label")
+    )
+
+    df_pd = smoothed.to_pandas()
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 5))
+
+    sns.lineplot(
+        data=df_pd,
+        x="Trial",
+        y="value",
+        hue="param_label",
+        ax=ax,
+        errorbar="se",
+    )
+    ax.set_ylabel("Structural accuracy")
+    ax.set_title(f"Learning curves — Graph = {graph}" + (f", {condition}" if condition else ""))
+    ax.legend(title="Parameters", bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=7)
+
+    if do_save and save_path is not None:
+        ax.get_figure().savefig(save_path, bbox_inches="tight")
+
+    return ax
+
+
+def plot_param_heatmap(df_peaks, graph="Transfer", condition="PI",
+                       ax=None, do_save=False, save_path=None):
+    """Plot a heatmap of peak structural accuracy across lambda and eta values.
+
+    Each cell shows the mean accuracy in the peak trial window for that
+    (lambda, eta) combination.
+
+    Parameters
+    ----------
+    df_peaks : polars.DataFrame
+        Output from load_grid_results().
+    graph : str
+        "Initial" or "Transfer".
+    condition : str
+        "PI" or "AL".
+    ax : matplotlib axis or None
+        Axis to plot on. Creates new figure if None.
+    do_save : bool
+        Whether to save the figure.
+    save_path : Path or None
+        Path to save the figure to if do_save is True.
+
+    Returns
+    -------
+    ax : matplotlib axis
+    """
+
+    filtered = (
+        df_peaks
+        .filter((pl.col("Graph") == graph) & (pl.col("condition") == condition))
+        .to_pandas()
+    )
+
+    # Pivot into matrix form for heatmap: rows=lambda, cols=eta
+    pivot = filtered.pivot_table(
+        index="lambda_val",
+        columns="eta_val",
+        values="peak_accuracy",
+        aggfunc="mean",
+    )
+
+    # Sort so highest lambda is at top
+    pivot = pivot.sort_index(ascending=False)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(8, 5))
+
+    sns.heatmap(
+        pivot,
+        ax=ax,
+        annot=True,
+        fmt=".1f",
+        cmap="viridis",
+        vmin=0,
+        vmax=100,
+        cbar_kws={"label": "Peak structural accuracy (%)"},
+    )
+    ax.set_xlabel("eta (η)")
+    ax.set_ylabel("lambda (λ)")
+    ax.set_title(f"Peak accuracy — Graph = {graph}, {condition}")
+
+    if do_save and save_path is not None:
+        ax.get_figure().savefig(save_path, bbox_inches="tight")
+
+    return ax
 
 
 ## Just for convenience: all parameters in TEM
