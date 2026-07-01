@@ -126,14 +126,77 @@ def design_mckenzie(config_file, n_trials=None):
     return design
 
 
+# def walks_operators(design, env, actions):
+#     """Create walks from a learning phase design."""
+#     walks = []
+#     nodes = [f"node_{n}" for n in range(1, 7)]
+#     for row in design.iter_rows(named=True):
+#         steps = []
+#         if row["trial_type"] == "integration":
+#             # start node (only applies in two-step trials)
+#             start_ind = nodes.index(row["start_node"])
+#             start_obs = env.get_observation(env.locations[start_ind])
+#             steps.append(
+#                 [
+#                     [{"id": start_ind, "shiny": None}],
+#                     [start_obs],
+#                     [actions[row["move_direction"]]],
+#                 ]
+#             )
+#
+#         # cue node
+#         cue_ind = nodes.index(row["cue_node"])
+#         cue_obs = env.get_observation(env.locations[cue_ind])
+#         steps.append(
+#             [
+#                 [{"id": cue_ind, "shiny": None}],
+#                 [cue_obs],
+#                 [actions[row["direction"]]],
+#             ]
+#         )
+#
+#         # target node
+#         target_ind = nodes.index(row["target_node"])
+#         target_obs = env.get_observation(env.locations[target_ind])
+#         steps.append(
+#             [
+#                 [{"id": target_ind, "shiny": None}],
+#                 [target_obs],
+#                 [0],
+#             ]
+#         )
+#
+#         for i_step, step in enumerate(steps):
+#             steps[i_step][1] = torch.stack(step[1], dim=0)
+#         walks.append(steps)
+#     return walks
+
+# This change is used to reset the Hebbian matrix by informing the model that a boundary exists between two blocks
+# Above is the original function
 def walks_operators(design, env, actions):
     """Create walks from a learning phase design."""
     walks = []
     nodes = [f"node_{n}" for n in range(1, 7)]
-    for row in design.iter_rows(named=True):
+    rows = list(design.iter_rows(named=True))
+
+    prev_block = None
+    for i, row in enumerate(rows):
+        # Insert boundary marker at block transitions within a design
+        current_block = row["block"]
+        if prev_block is not None and current_block != prev_block:
+            # Get the target node of the previous trial as the boundary location
+            prev_target_ind = nodes.index(rows[i - 1]["target_node"])
+            prev_obs = env.get_observation(env.locations[prev_target_ind])
+            boundary_step = [
+                [{"id": prev_target_ind, "shiny": None}],
+                torch.stack([prev_obs], dim=0),
+                [None],  # None action triggers M reset in model.py
+            ]
+            walks.append([boundary_step])
+        prev_block = current_block
+
         steps = []
         if row["trial_type"] == "integration":
-            # start node (only applies in two-step trials)
             start_ind = nodes.index(row["start_node"])
             start_obs = env.get_observation(env.locations[start_ind])
             steps.append(
@@ -143,8 +206,6 @@ def walks_operators(design, env, actions):
                     [actions[row["move_direction"]]],
                 ]
             )
-
-        # cue node
         cue_ind = nodes.index(row["cue_node"])
         cue_obs = env.get_observation(env.locations[cue_ind])
         steps.append(
@@ -154,8 +215,6 @@ def walks_operators(design, env, actions):
                 [actions[row["direction"]]],
             ]
         )
-
-        # target node
         target_ind = nodes.index(row["target_node"])
         target_obs = env.get_observation(env.locations[target_ind])
         steps.append(
@@ -165,12 +224,10 @@ def walks_operators(design, env, actions):
                 [0],
             ]
         )
-
         for i_step, step in enumerate(steps):
             steps[i_step][1] = torch.stack(step[1], dim=0)
         walks.append(steps)
     return walks
-
 
 def walks_mckenzie(design, nodes, node_features, features, n_obs):
     # create a one-hot tensor for each observation
@@ -223,6 +280,13 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
     log_interval = 1
     for walk in walks:
         i += 1
+
+        # Temporarily used to check if 'walks' becomes None
+        action = walk[-1][2][0]
+        if action is None:
+            print(f"Boundary marker at iteration {i}, M will be reset")
+
+
         # Get updated parameters for this backprop iteration
         (
             eta_new,
@@ -353,7 +417,26 @@ def learn_operators(env_files, design_files, out_dir, subject, run, override_fil
         env = World(env_files[d], randomise_observations=True, shiny=None)
         actions = {"south": 1, "east": 2, "north": 3, "west": 4}
         walks = walks_operators(design, env, actions)
-        walks = walks * walks_multiplier
+        # Insert boundary markers between repeated copies (walks x multiplier boundaries)
+        if walks_multiplier > 1:
+            walks_with_boundaries = []
+            for rep in range(walks_multiplier):
+                if rep > 0:
+                    # Add boundary marker at the junction between repetitions
+                    # Use the target location of the last step of the previous repetition
+                    last_walk = walks[-1]
+                    last_step = last_walk[-1]
+                    boundary_step = [
+                        last_step[0],  # same location
+                        last_step[1],  # same observation
+                        [None],  # None action triggers M reset
+                    ]
+                    walks_with_boundaries.append([boundary_step])
+                walks_with_boundaries.extend(walks)
+            walks = walks_with_boundaries
+        else:
+            walks = walks * walks_multiplier
+
         design_out_dir = out_dir / f"design-{d}"
         tem_model, adam, params, i = learn_walks(
             walks, env, tem_model, adam, params, design_out_dir, i
