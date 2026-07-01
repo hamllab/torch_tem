@@ -339,7 +339,7 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
     return tem_model, adam, params, i
 
 
-def learn_operators(env_files, design_files, out_dir, subject, run, override_file):
+def learn_operators(env_files, design_files, out_dir, subject, run, override_file, walks_multiplier=10):
     """Perform learning of multiple designs."""
     designs = [pl.read_csv(file) for file in design_files]
     out_dir = Path(out_dir)
@@ -353,7 +353,7 @@ def learn_operators(env_files, design_files, out_dir, subject, run, override_fil
         env = World(env_files[d], randomise_observations=True, shiny=None)
         actions = {"south": 1, "east": 2, "north": 3, "west": 4}
         walks = walks_operators(design, env, actions)
-        walks = walks * 10
+        walks = walks * walks_multiplier
         design_out_dir = out_dir / f"design-{d}"
         tem_model, adam, params, i = learn_walks(
             walks, env, tem_model, adam, params, design_out_dir, i
