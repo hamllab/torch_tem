@@ -282,10 +282,9 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
         i += 1
 
         # Temporarily used to check if 'walks' becomes None
-        action = walk[-1][2][0]
-        if action is None:
-            print(f"Boundary marker at iteration {i}, M will be reset")
-
+        #action = walk[-1][2][0]
+        #if action is None:
+        #    print(f"Boundary marker at iteration {i}, M will be reset")
 
         # Get updated parameters for this backprop iteration
         (
