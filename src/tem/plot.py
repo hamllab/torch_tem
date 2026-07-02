@@ -574,7 +574,7 @@ def plot_learning_curves(df_curves, graph="Transfer", condition=None,
         errorbar="se",
     )
     ax.set_ylabel("Structural accuracy")
-    ax.set_title(f"Learning curves — Graph = {graph}" + (f", {condition}" if condition else ""))
+    ax.set_title(f"Learning curves: {graph} map" + (f", {condition} group" if condition else ""))
     ax.legend(title="Parameters", bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=7)
 
     if do_save and save_path is not None:
@@ -642,7 +642,7 @@ def plot_param_heatmap(df_peaks, graph="Transfer", condition="PI",
     )
     ax.set_xlabel("eta (η)")
     ax.set_ylabel("lambda (λ)")
-    ax.set_title(f"Peak accuracy — Graph = {graph}, {condition}")
+    ax.set_title(f"Peak accuracy: {graph} map, {condition} group")
 
     if do_save and save_path is not None:
         ax.get_figure().savefig(save_path, bbox_inches="tight")
