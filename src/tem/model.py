@@ -462,7 +462,8 @@ class Model(torch.nn.Module):
                 if a is None:
                     # Reset the initial connectivity matrix for this walk
                     for M in prev_iter[0].M:
-                        M[a_i, :, :] = 0
+                        #M[a_i, :, :] = 0
+                        M[a_i, :, :] = M[a_i, :, :] * 0.5  #lambda_shift
                     # Reset the abstract location for this walk
                     for f, g_inf in enumerate(prev_iter[0].g_inf):
                         g_inf[a_i, :] = self.g_init[f]

@@ -441,7 +441,9 @@ def action_patch(location_from, location_to, radius, colour):
     return plt.Polygon(np.stack([xdat, ydat], axis=1), color=colour)
 
 
-def load_grid_results(sim_dir, study_prefix="study-grid-", tag="Accuracies/g", peak_fraction=0.1):
+def load_grid_results(sim_dir, study_prefix="study-grid-",
+                      tags=("Accuracies/g",),
+                      peak_fraction=0.1):
     """Load and combine aggregated parquet files from all grid search studies.
 
     Reads each study folder matching study_prefix, parses lambda and eta from
@@ -485,20 +487,28 @@ def load_grid_results(sim_dir, study_prefix="study-grid-", tag="Accuracies/g", p
         try:
             lambda_str = [p for p in parts if p.startswith("l")][0][1:]
             eta_str = [p for p in parts if p.startswith("e")][0][1:]
+            walks_str = [p for p in parts if p.startswith("w")][0][1:]
             lambda_val = float(lambda_str.replace("_", "."))
             eta_val = float(eta_str.replace("_", "."))
+            walks_val = int(walks_str)
         except (IndexError, ValueError):
             continue
 
         df = pl.read_parquet(parquet_path)
         df = (
-            df.filter(pl.col("tag") == tag)
+            df.filter(pl.col("tag").is_in(list(tags)))
             .with_columns(
-                pl.col("step").cum_count().over("subject", "run", "design").alias("Trial"),
+                pl.col("step").cum_count().over("subject", "run", "design", "tag").alias("Trial"),
                 pl.col("design").replace({"0": "Initial", "1": "Transfer"}).alias("Graph"),
                 pl.lit(lambda_val).alias("lambda_val"),
                 pl.lit(eta_val).alias("eta_val"),
+                pl.lit(walks_val).alias("walks_val"),
                 pl.lit(f"λ={lambda_val}, η={eta_val}").alias("param_label"),
+                # Convert tags to structural and perceptual accuracies
+                pl.col("tag").replace({
+                    "Accuracies/g": "structural",
+                    "Accuracies/p": "perceptual"
+                }).alias("accuracy_type"),
             )
         )
         curve_dfs.append(df)
@@ -508,7 +518,7 @@ def load_grid_results(sim_dir, study_prefix="study-grid-", tag="Accuracies/g", p
         trial_min = int(max_trial * (1 - peak_fraction))
         peak = (
             df.filter(pl.col("Trial") >= trial_min)
-            .group_by("Graph", "condition", "lambda_val", "eta_val")
+            .group_by("Graph", "condition", "lambda_val", "eta_val", "walks_val", "accuracy_type")
             .agg(pl.col("value").mean().alias("peak_accuracy"))
         )
         peak_rows.append(peak)

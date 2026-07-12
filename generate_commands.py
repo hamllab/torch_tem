@@ -8,7 +8,7 @@ for l in lambdas:
         for w in walks:
             l_str = str(l).replace(".", "_")
             e_str = str(e).replace(".", "_")
-            study = f"study-grid2-l{l_str}-e{e_str}-w{w}"
+            study = f"study-grid3-l{l_str}-e{e_str}-w{w}"
             cmd = (f"uv run jupyter/train.py "
                    f"--lambda-val {l} --eta-val {e} "
                    f"--walks-multiplier {w} "
