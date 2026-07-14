@@ -347,6 +347,16 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
         if isinstance(plot_loss, np.int64):
             plot_loss = None
 
+        # Save x_gt_logits for the last step of each walk (for Luce choice rule fitting)
+        last_step = forward[-1]
+        logits = last_step.x_logits[2].detach().numpy()[0]  # shape: (n_observations,)
+        logits_path = out_dir / "x_gt_logits.parquet"
+        new_row = pl.DataFrame({"iteration": [i], "logits": [logits.tolist()]})
+        if logits_path.exists():
+            pl.concat([pl.read_parquet(logits_path), new_row]).write_parquet(logits_path)
+        else:
+            new_row.write_parquet(logits_path)
+
         # Compute model accuracies
         acc_p, acc_g, acc_gt = np.mean(
             [[np.mean(a) for a in step.correct()] for step in forward], axis=0
@@ -414,8 +424,22 @@ def learn_operators(env_files, design_files, out_dir, subject, run, override_fil
     i = 0  # iteration counter
     for d, design in enumerate(designs):
         env = World(env_files[d], randomise_observations=True, shiny=None)
+
+        # Save node to observation index mapping for Luce choice rule fitting
+        design_out_dir = out_dir / f"design-{d}"
+        design_out_dir.mkdir(parents=True, exist_ok=True)
+
+        obs_mapping = {
+            f"node_{loc['id'] + 1}": loc["observation"]
+            for loc in env.locations
+        }
+
+        with open(design_out_dir / f"sub-{subject}_run-{run}_design-{d}_obs_mapping.json", "w") as f:
+            json.dump(obs_mapping, f)
+
         actions = {"south": 1, "east": 2, "north": 3, "west": 4}
         walks = walks_operators(design, env, actions)
+
         # Insert boundary markers between repeated copies (walks x multiplier boundaries)
         if walks_multiplier > 1:
             walks_with_boundaries = []
