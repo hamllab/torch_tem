@@ -266,24 +266,25 @@ def walks_mckenzie(design, nodes, node_features, features, n_obs):
             walks.append(steps)
     return walks
 
-
-def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
+def learn_walks(walks, env, tem_model, adam, params, out_dir, i, run=1):
     """Learn a series of walks through an environment."""
     visited = [[False for _ in range(env.n_locations)]]
     prev_iter = None
 
-    # Create a tensor board to stay updated on training progress. Start tensorboard with tensorboard --logdir=runs
     str_dir = str(out_dir) + "/"
     writer = SummaryWriter(str_dir)
-    # Create a logger to write log output to file
     logger = utils.make_logger(str_dir)
     log_interval = 1
+
+    # Accumulate x_gt_logits in memory, write once at end
+    logits_list = []
+
     for walk in walks:
         i += 1
 
         # Temporarily used to check if 'walks' becomes None
-        #action = walk[-1][2][0]
-        #if action is None:
+        # action = walk[-1][2][0]
+        # if action is None:
         #    print(f"Boundary marker at iteration {i}, M will be reset")
 
         # Get updated parameters for this backprop iteration
@@ -347,25 +348,17 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
         if isinstance(plot_loss, np.int64):
             plot_loss = None
 
-        # Save x_gt_logits for the last step of each walk (for Luce choice rule fitting)
+        # Accumulate x_gt_logits in memory (last step of each walk only)
         last_step = forward[-1]
         logits = last_step.x_logits[2].detach().numpy()[0]  # shape: (n_observations,)
-        logits_path = out_dir / "x_gt_logits.parquet"
-        new_row = pl.DataFrame({"iteration": [i], "logits": [logits.tolist()]})
-        if logits_path.exists():
-            pl.concat([pl.read_parquet(logits_path), new_row]).write_parquet(logits_path)
-        else:
-            new_row.write_parquet(logits_path)
+        logits_list.append({"iteration": i, "logits": logits.tolist()})
 
-        # Compute model accuracies
         acc_p, acc_g, acc_gt = np.mean(
             [[np.mean(a) for a in step.correct()] for step in forward], axis=0
         )
         acc_p, acc_g, acc_gt = [a * 100 for a in (acc_p, acc_g, acc_gt)]
 
-        # Log progress
         if i % log_interval == 0:
-            # Write series of messages to logger from this backprop iteration
             logger.info(
                 "Finished backprop iter {:d} in {:.2f} seconds.".format(
                     i, time.time() - start_time
@@ -392,7 +385,6 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
             )
             logger.info("Weights:" + str([w for w in loss_weights.numpy()]))
             logger.info(" ")
-            # Also write progress to tensorboard, and all loss components. Order: [L_p_g, L_p_x, L_x_gen, L_x_g, L_x_p, L_g, L_reg_g, L_reg_p]
             writer.add_scalar("Losses/Total", loss.detach().numpy(), i)
             if plot_loss is not None:
                 writer.add_scalar("Losses/p_g", plot_loss[0], i)
@@ -409,7 +401,8 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i):
 
     writer.close()
 
-    return tem_model, adam, params, i
+    # Return logits_list for the caller to write once
+    return tem_model, adam, params, i, logits_list
 
 
 def learn_operators(env_files, design_files, out_dir, subject, run, override_file, walks_multiplier=10):
@@ -450,9 +443,9 @@ def learn_operators(env_files, design_files, out_dir, subject, run, override_fil
                     last_walk = walks[-1]
                     last_step = last_walk[-1]
                     boundary_step = [
-                        last_step[0],  # same location
-                        last_step[1],  # same observation
-                        [None],  # None action triggers M reset
+                        last_step[0], # same location
+                        last_step[1], # same observation
+                        [None], # None action triggers boundary reset (g_inf and x_inf only, M is preserved)
                     ]
                     walks_with_boundaries.append([boundary_step])
                 walks_with_boundaries.extend(walks)
@@ -460,10 +453,16 @@ def learn_operators(env_files, design_files, out_dir, subject, run, override_fil
         else:
             walks = walks * walks_multiplier
 
-        design_out_dir = out_dir / f"design-{d}"
-        tem_model, adam, params, i = learn_walks(
-            walks, env, tem_model, adam, params, design_out_dir, i
+        # learn_walks now returns logits_list as well
+        tem_model, adam, params, i, logits_list = learn_walks(
+            walks, env, tem_model, adam, params, design_out_dir, i, run
         )
+
+        # Write x_gt_logits once per run (much faster than per-walk)
+        pl.DataFrame(logits_list).write_parquet(
+            design_out_dir / f"sub-{subject}_run-{run}_design-{d}_x_gt_logits.parquet"
+        )
+
         torch.save(
             tem_model.state_dict(),
             design_out_dir / f"sub-{subject}_run-{run}_design-{d}_tem.pt",
@@ -483,7 +482,7 @@ def learn_mckenzie(design, node_labels, node_features, features, out_dir, run):
     adam = torch.optim.Adam(tem_model.parameters(), lr=params["lr_max"])
     walks = walks_mckenzie(design, node_labels, node_features, features, params["n_x"])
     env = SimpleNamespace(n_locations=len(node_labels))
-    tem_model, adam, params, i = learn_walks(
+    tem_model, adam, params, i, logits_list = learn_walks(
         walks, env, tem_model, adam, params, out_dir, run
     )
     subject = "001"
