@@ -544,6 +544,138 @@ class Model(torch.nn.Module):
         # location, and also the non-softmaxed logits
         return x, logits
 
+    # def inf_g(self, p_x, g_gen, x, locations):
+    #     # Infer abstract location from the combination of [grounded location retrieved
+    #     # from memory by sensory experience] ...
+    #     if self.hyper["use_p_inf"]:
+    #         # Not in paper, but makes sense from symmetry with f_x: first get g from p
+    #         # by "summing over sensory preferences" g = p * W_repeat^T
+    #         g_downsampled = [
+    #             torch.matmul(p_x[f], torch.t(self.hyper["W_repeat"][f]))
+    #             for f in range(self.hyper["n_f"])
+    #         ]
+    #         # Then use abstract location after summing over sensory preferences as
+    #         # input to MLP to obtain the inferred abstract location from memory
+    #         mu_g_mem = self.f_mu_g_mem(g_downsampled)
+    #         # Not in paper, but this greatly improves zero-shot inference: provide the
+    #         # uncertainty function of the inferred abstract location with measures of
+    #         # memory quality
+    #         with torch.no_grad():
+    #             # For the first measure, use the grounded location inferred from memory
+    #             # to generate an observation
+    #             x_hat, x_hat_logits = self.gen_x(p_x[0])
+    #             # Then calculate the error between the generated observation and the
+    #             # actual observation: if the memory is working well, this error should
+    #             # be small
+    #             err = utils.squared_error(x, x_hat)
+    #         # The second measure is the vector norm of the inferred abstract location;
+    #         # good memories should have similar vector norms. Concatenate the two
+    #         # measures as input for the abstract location uncertainty function
+    #         sigma_g_input = [
+    #             torch.cat(
+    #                 (torch.sum(g**2, dim=1, keepdim=True), torch.unsqueeze(err, dim=1)),
+    #                 dim=1,
+    #             )
+    #             for g in mu_g_mem
+    #         ]
+    #         # Not in paper, but recommended by James for stability: get final mean of
+    #         # inferred abstract location by clamping activations between -1 and 1
+    #         mu_g_mem = self.f_g_clamp(mu_g_mem)
+    #         # And get standard deviation/uncertainty of inferred abstract location by
+    #         # providing uncertainty function with memory quality measures
+    #         sigma_g_mem = self.f_sigma_g_mem(sigma_g_input)
+    #     # ... and [previous abstract location and action (path integration)]
+    #     mu_g_path = g_gen[0]
+    #     sigma_g_path = g_gen[1]
+    #     # Infer abstract location by combining previous abstract location and grounded
+    #     # location retrieved from memory by current sensory experience
+    #     mu_g, sigma_g = [], []
+    #     for f in range(self.hyper["n_f"]):
+    #         if self.hyper["use_p_inf"]:
+    #             # Then get full gaussian distribution of inferred abstract location by
+    #             # calculating precision weighted mean
+    #             mu, sigma = utils.inv_var_weight(
+    #                 [mu_g_path[f], mu_g_mem[f]], [sigma_g_path[f], sigma_g_mem[f]]
+    #             )
+    #         else:
+    #             # Or simply completely ignore the inference memory here, to test if
+    #             # things are working
+    #             mu, sigma = mu_g_path[f], sigma_g_path[f]
+    #         # Append mu and sigma to list for all frequency modules
+    #         mu_g.append(mu)
+    #         sigma_g.append(sigma)
+    #     # Finally (though not in paper), also add object vector cell information to
+    #     # inferred abstract location for environments with shiny objects
+    #     shiny_envs = [location["shiny"] is not None for location in locations]
+    #     if any(shiny_envs):
+    #         # Find for which environments the current location has a shiny object
+    #         shiny_locations = torch.unsqueeze(
+    #             torch.stack(
+    #                 [
+    #                     torch.tensor(location["shiny"], dtype=torch.float)
+    #                     for location in locations
+    #                     if location["shiny"] is not None
+    #                 ]
+    #             ),
+    #             dim=-1,
+    #         )
+    #         # Get abstract location for environments with shiny objects and feed to
+    #         # each of the object vector cell modules
+    #         mu_g_shiny = self.f_mu_g_shiny(
+    #             [
+    #                 shiny_locations
+    #                 for _ in range(
+    #                     self.hyper["n_f_g"]
+    #                     if self.hyper["separate_ovc"]
+    #                     else self.hyper["n_f"]
+    #                 )
+    #             ]
+    #         )
+    #         sigma_g_shiny = self.f_sigma_g_shiny(
+    #             [
+    #                 shiny_locations
+    #                 for _ in range(
+    #                     self.hyper["n_f_g"]
+    #                     if self.hyper["separate_ovc"]
+    #                     else self.hyper["n_f"]
+    #                 )
+    #             ]
+    #         )
+    #         # Update only object vector modules with shiny-inferred abstract location:
+    #         # start from offset if object vector modules are separate
+    #         module_start = self.hyper["n_f_g"] if self.hyper["separate_ovc"] else 0
+    #         # Inverse variance weighting is associative, so I can just do additional
+    #         # inverse variance weighting to the previously obtained mu and sigma - but
+    #         # only for object vector cell modules!
+    #         for f in range(module_start, self.hyper["n_f"]):
+    #             # Add inferred abstract location from shiny objects to previously
+    #             # obtained position, only for environments with shiny objects
+    #             mu, sigma = utils.inv_var_weight(
+    #                 [mu_g[f][shiny_envs, :], mu_g_shiny[f - module_start]],
+    #                 [sigma_g[f][shiny_envs, :], sigma_g_shiny[f - module_start]],
+    #             )
+    #             # In order to update only the environments with shiny objects, without
+    #             # in-place value assignment, construct a mask of shiny environments
+    #             mask = torch.zeros_like(mu_g[f], dtype=torch.bool)
+    #             mask[shiny_envs, :] = True
+    #             # Use mask to update the shiny environment entries in inferred abstract
+    #             # locations
+    #             mu_g[f] = mu_g[f].masked_scatter(mask, mu)
+    #             sigma_g[f] = sigma_g[f].masked_scatter(mask, sigma)
+    #     # Either sample inferred abstract location from combined (precision weighted)
+    #     # distribution or just take mean
+    #     g = [
+    #         (
+    #             mu_g[f] + sigma_g[f] * np.random.randn()
+    #             if self.hyper["do_sample"]
+    #             else mu_g[f]
+    #         )
+    #         for f in range(self.hyper["n_f"])
+    #     ]
+    #     # Return abstract location inferred from grounded location from memory and
+    #     # previous abstract location
+    #     return g
+
     def inf_g(self, p_x, g_gen, x, locations):
         # Infer abstract location from the combination of [grounded location retrieved
         # from memory by sensory experience] ...
@@ -573,7 +705,7 @@ class Model(torch.nn.Module):
             # measures as input for the abstract location uncertainty function
             sigma_g_input = [
                 torch.cat(
-                    (torch.sum(g**2, dim=1, keepdim=True), torch.unsqueeze(err, dim=1)),
+                    (torch.sum(g ** 2, dim=1, keepdim=True), torch.unsqueeze(err, dim=1)),
                     dim=1,
                 )
                 for g in mu_g_mem
@@ -587,6 +719,30 @@ class Model(torch.nn.Module):
         # ... and [previous abstract location and action (path integration)]
         mu_g_path = g_gen[0]
         sigma_g_path = g_gen[1]
+
+        # --- DIAGNOSTIC (no effect on training) ---
+        # inv_var_weight combines the two estimates by precision (1/sigma^2), so the
+        # share of g_inf that comes from memory rather than from path integration is
+        #     w_mem = (1/sig_mem^2) / (1/sig_path^2 + 1/sig_mem^2)
+        # w_mem near 0 means g_inf is effectively just g_gen, i.e. the model is running
+        # as a pure path integrator and M never corrects the position estimate.
+        # Overwritten on every call; read it straight after a forward pass, before any
+        # other forward (e.g. the diagnostic walk) overwrites it.
+        if self.hyper["use_p_inf"]:
+            with torch.no_grad():
+                self.sigma_diag = []
+                for f in range(self.hyper["n_f"]):
+                    prec_path = 1.0 / (sigma_g_path[f] ** 2 + 1e-12)
+                    prec_mem = 1.0 / (sigma_g_mem[f] ** 2 + 1e-12)
+                    self.sigma_diag.append({
+                        "sig_path": float(torch.median(sigma_g_path[f])),
+                        "sig_mem": float(torch.median(sigma_g_mem[f])),
+                        "w_mem": float(torch.median(prec_mem / (prec_path + prec_mem))),
+                    })
+        else:
+            self.sigma_diag = None
+        # --- end diagnostic ---
+
         # Infer abstract location by combining previous abstract location and grounded
         # location retrieved from memory by current sensory experience
         mu_g, sigma_g = [], []
@@ -625,20 +781,20 @@ class Model(torch.nn.Module):
                 [
                     shiny_locations
                     for _ in range(
-                        self.hyper["n_f_g"]
-                        if self.hyper["separate_ovc"]
-                        else self.hyper["n_f"]
-                    )
+                    self.hyper["n_f_g"]
+                    if self.hyper["separate_ovc"]
+                    else self.hyper["n_f"]
+                )
                 ]
             )
             sigma_g_shiny = self.f_sigma_g_shiny(
                 [
                     shiny_locations
                     for _ in range(
-                        self.hyper["n_f_g"]
-                        if self.hyper["separate_ovc"]
-                        else self.hyper["n_f"]
-                    )
+                    self.hyper["n_f_g"]
+                    if self.hyper["separate_ovc"]
+                    else self.hyper["n_f"]
+                )
                 ]
             )
             # Update only object vector modules with shiny-inferred abstract location:

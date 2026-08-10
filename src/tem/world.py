@@ -19,180 +19,50 @@ import time
 from types import SimpleNamespace
 from tem import utils
 from torch.utils.tensorboard import SummaryWriter
+from tem import analyse
 
 
-# Functions for generating data that TEM trains on: sequences of [state,observation,action] tuples
-def generate_mckenzie(config_file, n_trials=None):
-    """
-    Generate data in the McKenzie hierarchical schema paradigm.
-
-    Parameters
-    ----------
-    config_file : str, Path
-        Each element indicates one phase of training (e.g., AB, CD,
-        ABCD). Each element gives a list of trial types, indicating
-        the current contexts and object sets to be presented together.
-        Within each trial type, there is a list of contexts that gives
-        the object-reward pairings in that context in that set.
-
-    n_trials : dict of int, optional
-        Number of trials for each phase. If not specified, will be
-        taken from the config file.
-    """
-    with open(config_file, "r") as f:
-        config = json.load(f)
-
-    if n_trials is None:
-        n_trials = {phase["name"]: phase["n"] for phase in config["phases"]}
-
-    df_list = []
-    valence_labels = {-1: "N", 1: "R"}
-    for phase in config["phases"]:
-        n = n_trials[phase["name"]]
-        context = np.empty(n, dtype=StringDType)
-        object_set = np.empty(n, dtype=StringDType)
-        object1 = np.empty(n, dtype=StringDType)
-        object2 = np.empty(n, dtype=StringDType)
-        valence1 = np.empty(n, dtype=StringDType)
-        valence2 = np.empty(n, dtype=StringDType)
-        trial = np.arange(1, n + 1)
-        phase_contexts = list(phase["contexts"].keys())
-        for i in range(n):
-            # pick a context (not the same as the previous)
-            if n == 1:
-                context[i] = np.random.choice(phase_contexts)
-            else:
-                other_contexts = [p for p in phase_contexts if p != context[i - 1]]
-                context[i] = np.random.choice(other_contexts)
-
-            # pick an object set
-            valences = phase["contexts"][context[i]]
-            object_sets = list(valences.keys())
-            obj_set = np.random.choice(object_sets)
-            object_set[i] = obj_set
-            objects = list(valences[obj_set].keys())
-
-            # pick an ordering via coin flip
-            if np.random.rand() < 0.5:
-                object1[i] = objects[0]
-                object2[i] = objects[1]
-            else:
-                object1[i] = objects[1]
-                object2[i] = objects[0]
-
-            # determine valence
-            valence1[i] = valence_labels[valences[obj_set][object1[i]]]
-            valence2[i] = valence_labels[valences[obj_set][object2[i]]]
-
-        # create a data frame with all trial information
-        phase_df = pl.DataFrame(
-            {
-                "phase": phase["name"],
-                "trial": trial,
-                "context": context,
-                "object_set": object_set,
-                "object1": object1,
-                "object2": object2,
-                "valence1": valence1,
-                "valence2": valence2,
-            }
-        )
-        df_list.append(phase_df)
-    df = pl.concat(df_list)
-    return df
 
 
-def design_mckenzie(config_file, n_trials=None):
-    df = generate_mckenzie(config_file, n_trials)
-    index = np.random.choice([0, 1], size=df.shape[0])
-    df_trial = df.select(
-        "phase",
-        "trial",
-        "context",
-        "object_set",
-        node=pl.concat_str("context", "object1", "object2"),
-        action=np.array(["L", "R"])[index],
-        object=pl.concat_list("object1", "object2").list.get(index),
-        valence=pl.concat_list("valence1", "valence2").list.get(index),
-    )
-    df_choice = df_trial.with_row_index().with_columns(
-        trial_type=pl.lit("choice")
-    )
-    df_feedback = df_trial.with_row_index().with_columns(
-        trial_type=pl.lit("feedback"),
-        node=pl.concat_str("context", "action", "object", "valence")
-    )
-    design = pl.concat([df_choice, df_feedback]).sort("index", "trial_type")
-    return design
+def generate_diagnostic_walk(environment, multiplier=100):
+    """Generate a long random walk purely for extracting rate-map
+    representations (not used for training). multiplier=100 was verified
+    to give stable non-zero visit counts for all 6 locations even in the
+    second half of the walk (which is what rate_map() averages over)."""
+    walk = environment.generate_walks(environment.n_locations * multiplier, 1)[0]
+    for step in walk:
+        step[0] = [step[0]]
+        step[1] = step[1].unsqueeze(dim=0)
+        step[2] = [step[2]]
+    return walk
 
 
-# def walks_operators(design, env, actions):
-#     """Create walks from a learning phase design."""
-#     walks = []
-#     nodes = [f"node_{n}" for n in range(1, 7)]
-#     for row in design.iter_rows(named=True):
-#         steps = []
-#         if row["trial_type"] == "integration":
-#             # start node (only applies in two-step trials)
-#             start_ind = nodes.index(row["start_node"])
-#             start_obs = env.get_observation(env.locations[start_ind])
-#             steps.append(
-#                 [
-#                     [{"id": start_ind, "shiny": None}],
-#                     [start_obs],
-#                     [actions[row["move_direction"]]],
-#                 ]
-#             )
-#
-#         # cue node
-#         cue_ind = nodes.index(row["cue_node"])
-#         cue_obs = env.get_observation(env.locations[cue_ind])
-#         steps.append(
-#             [
-#                 [{"id": cue_ind, "shiny": None}],
-#                 [cue_obs],
-#                 [actions[row["direction"]]],
-#             ]
-#         )
-#
-#         # target node
-#         target_ind = nodes.index(row["target_node"])
-#         target_obs = env.get_observation(env.locations[target_ind])
-#         steps.append(
-#             [
-#                 [{"id": target_ind, "shiny": None}],
-#                 [target_obs],
-#                 [0],
-#             ]
-#         )
-#
-#         for i_step, step in enumerate(steps):
-#             steps[i_step][1] = torch.stack(step[1], dim=0)
-#         walks.append(steps)
-#     return walks
-
-# This change is used to reset the Hebbian matrix by informing the model that a boundary exists between two blocks
-# Above is the original function
 def walks_operators(design, env, actions):
-    """Create walks from a learning phase design."""
+    """Create walks from a learning phase design.
+
+    Returns (walks, blocks) where blocks[i] is the block number of walks[i].
+    Boundary markers get the block they follow, so they travel with it when a
+    block is repeated.
+    """
     walks = []
+    blocks = []
     nodes = [f"node_{n}" for n in range(1, 7)]
     rows = list(design.iter_rows(named=True))
 
     prev_block = None
     for i, row in enumerate(rows):
-        # Insert boundary marker at block transitions within a design
         current_block = row["block"]
         if prev_block is not None and current_block != prev_block:
-            # Get the target node of the previous trial as the boundary location
             prev_target_ind = nodes.index(rows[i - 1]["target_node"])
             prev_obs = env.get_observation(env.locations[prev_target_ind])
             boundary_step = [
                 [{"id": prev_target_ind, "shiny": None}],
                 torch.stack([prev_obs], dim=0),
-                [None],  # None action triggers M reset in model.py
+                [None],
             ]
             walks.append([boundary_step])
+            blocks.append(prev_block)
+
         prev_block = current_block
 
         steps = []
@@ -227,131 +97,356 @@ def walks_operators(design, env, actions):
         for i_step, step in enumerate(steps):
             steps[i_step][1] = torch.stack(step[1], dim=0)
         walks.append(steps)
-    return walks
+        blocks.append(current_block)
 
-def walks_mckenzie(design, nodes, node_features, features, n_obs):
-    # create a one-hot tensor for each observation
-    observations = {}
-    for i, name in enumerate(nodes):
-        obs = torch.zeros(n_obs).scatter_(0, torch.tensor(i), torch.ones(n_obs))
-        observations[name] = obs.view(obs.shape[0])
+    return walks, blocks
 
-    for i, feats in enumerate(node_features):
-        for feat, value in feats.items():
-            j = features[feat]["start"] + features[feat]["items"].index(value)
-            observations[nodes[i]][j] = 1
 
-    actions = {"L": 0, "R": 1}
-    walks = []
-    for row in design.iter_rows(named=True):
-        if row["trial_type"] == "choice":
-            steps = []
-            steps.append(
-                [
-                    [{"id": nodes.index(row["node"]), "shiny": None}],
-                    [observations[row["node"]]],
-                    [actions[row["action"]]],
-                ]
-            )
-        elif row["trial_type"] == "feedback":
-            steps.append(
-                [
-                    [{"id": nodes.index(row["node"]), "shiny": None}],
-                    [observations[row["node"]]],
-                    [0],
-                ]
-            )
-            for i_step, step in enumerate(steps):
-                steps[i_step][1] = torch.stack(step[1], dim=0)
-            walks.append(steps)
-    return walks
+def reset_perceptual_weights(tem_model, adam=None, reset_optimizer_state=False):
+    """
+    Re-initializes ONLY the perceptual decoding pathway's learned weights
+    (w_x, b_x, MLP_c_star) back to their startup values, leaving every
+    other trained weight (MLP_D_a, g_init, M, etc.) untouched.
 
-def learn_walks(walks, env, tem_model, adam, params, out_dir, i, run=1):
-    """Learn a series of walks through an environment."""
+    reset_optimizer_state: if True, also clear Adam's exp_avg/exp_avg_sq for
+    these parameters. In-place weight modification keeps the same Parameter
+    objects, so without this the freshly re-initialized weights are still
+    driven by momentum accumulated during Initial-map training. Default False
+    reproduces study-39's behavior exactly.
+    """
+    with torch.no_grad():
+        tem_model.w_x.fill_(1.0)
+        tem_model.b_x.zero_()
+        for from_layer in range(2):
+            for n in range(tem_model.MLP_c_star.N):
+                torch.nn.init.xavier_normal_(tem_model.MLP_c_star.w[n][from_layer].weight)
+                if tem_model.MLP_c_star.w[n][from_layer].bias is not None:
+                    tem_model.MLP_c_star.w[n][from_layer].bias.fill_(0.0)
+
+    if reset_optimizer_state and adam is not None:
+        for param in [tem_model.w_x, tem_model.b_x, *tem_model.MLP_c_star.parameters()]:
+            adam.state.pop(param, None)
+
+def reinit_transition_weights(tem_model, scale=1.0):
+    """
+    Re-initialize MLP_D_a's hidden->output layer with xavier (times `scale`),
+    replacing the exact zeros set by Model.init_trainable via
+    set_weights(1, 0.0).
+
+    Why: with W2 = 0 the transition delta is 0, so g_gen == g_prev at every
+    step. At the target step g_prev is the cue's g, so gen_p(g_gen, M)
+    retrieves the CUE's memory and the model predicts the cue's object.
+    Measured on study-40 (target-step, 45-way argmax): block 1 accuracy falls
+    from 16.2% (chance = 1/6 among the map's objects) in trials 1-20 to 8.1%
+    in trials 61-100, while cue-copying rises from 18% to 76%. The model is
+    converging on "predict no movement", and a sharper M makes that wrong
+    answer sharper.
+
+    W2 = 0 also freezes the first layer, since dL/dW1 = W2^T dL/ddelta = 0.
+    Measured on study-40 (scale=0): after training, w.{n}.0.weight norms are still
+    at their xavier init values (2.3-2.8 vs xavier ~2.58), confirming it barely moves.
+
+    Original TEM can afford this warm start over 10000 iterations. Here block 1
+    is 168 trials, and climbing W2 off zero consumes most of it.
+
+    scale=0.0 leaves the zero init in place, reproducing the pre-study-44 behavior.
+    """
+    with torch.no_grad():
+        for n in range(tem_model.MLP_D_a.N):
+            w = tem_model.MLP_D_a.w[n][1].weight
+            torch.nn.init.xavier_normal_(w)
+            w.mul_(scale)
+
+
+def parameter_iteration_decoupled(i_memory, i_weights, params):
+    """
+    Same six outputs as parameters.parameter_iteration(), but eta/lambda
+    (Hebbian memory write/forget rate) are computed from i_memory, while
+    everything else (lr, p2g_scale_offset, walk_length_center, loss_weights)
+    is computed from i_weights. Lets the memory schedule be reset at a
+    design transition without also re-maximizing the network's learning
+    rate/loss weights.
+    """
+    eta, lamb, _, _, _, _ = parameters.parameter_iteration(i_memory, params)
+    _, _, p2g_scale_offset, lr, walk_length_center, loss_weights = parameters.parameter_iteration(i_weights, params)
+    return eta, lamb, p2g_scale_offset, lr, walk_length_center, loss_weights
+
+
+# def learn_walks(walks, env, tem_model, adam, params, out_dir, i, run=1,
+#                  save_representations=20, prev_iter=None, accumulate_steps=1,
+#                  memory_iteration_offset=0):
+#     """
+#     memory_iteration_offset: subtracted from `i` when computing eta/lambda
+#     (NOT lr/loss weights), so the memory-write schedule can be independently
+#     reset at a design transition. Default 0 = memory schedule follows i
+#     normally (current behavior). Set to the value of `i` at the start of
+#     the new design to make eta/lambda restart from ~0 there, while lr and
+#     loss weights keep following the unmodified, continuous i.
+#     """
+#     visited = [[False for _ in range(env.n_locations)]]
+#
+#     str_dir = str(out_dir) + "/"
+#     writer = SummaryWriter(str_dir)
+#     logger = utils.make_logger(str_dir)
+#     log_interval = 1
+#
+#     logits_list = []
+#     representation_snapshots = []
+#     per_trial_correct = []
+#
+#     accum_counter = 0
+#     adam.zero_grad()
+#
+#     n_walks = len(walks)
+#     for walk_i, walk in enumerate(walks):
+#         i += 1
+#         i_memory = i - memory_iteration_offset
+#         is_last_walk = (walk_i == n_walks - 1)
+#
+#         (eta_new, lambda_new, p2g_scale_offset, lr, walk_length_center,
+#          loss_weights) = parameter_iteration_decoupled(i_memory, i, params)
+#         start_time = time.time()
+#         tem_model.hyper["eta"] = eta_new
+#         tem_model.hyper["lambda"] = lambda_new
+#         tem_model.hyper["p2g_scale_offset"] = p2g_scale_offset
+#         for param_group in adam.param_groups:
+#             param_group["lr"] = lr
+#
+#         forward = tem_model(walk, prev_iter)
+#
+#         loss = torch.tensor(0.0, requires_grad=True)
+#         plot_loss = 0
+#         for step in forward:
+#             step_loss = []
+#             for env_i, env_visited in enumerate(visited):
+#                 if env_visited[step.g[env_i]["id"]]:
+#                     step_loss.append(loss_weights * torch.stack([l[env_i] for l in step.L]))
+#                 else:
+#                     env_visited[step.g[env_i]["id"]] = True
+#             step_loss = (
+#                 torch.tensor(0) if not step_loss
+#                 else torch.mean(torch.stack(step_loss, dim=0), dim=0)
+#             )
+#             plot_loss = plot_loss + step_loss.detach().numpy()
+#             loss = loss + torch.sum(step_loss)
+#
+#         # Scale by accumulate_steps so accumulated gradients represent an
+#         # average across trials, not a SUM — keeps effective learning rate
+#         # consistent with the non-accumulated case.
+#         (loss / accumulate_steps).backward(retain_graph=True)
+#         accum_counter += 1
+#
+#         if accum_counter >= accumulate_steps or is_last_walk:
+#             adam.step()
+#             adam.zero_grad()
+#             accum_counter = 0
+#
+#         # Iteration.detach() (in model.py) covers L, M, g_gen, p_gen, x_gen,
+#         # x_inf, g_inf, p_inf — but NOT x_logits. So we detach here for
+#         # everything it covers, then explicitly .detach() x_logits wherever
+#         # we touch it below.
+#         for step in forward:
+#             step.detach()
+#
+#         # --- x_gt_logits (explicit .detach()) ---
+#         last_step = forward[-1]
+#         logits_gt = last_step.x_logits[2].detach().numpy()[0]
+#         logits_list.append({"iteration": i, "logits": logits_gt.tolist()})
+#
+#         # --- x_p_logits / x_g_logits (explicit .detach()) ---
+#         logits_p = last_step.x_logits[0].detach().numpy()[0]
+#         logits_g = last_step.x_logits[1].detach().numpy()[0]
+#
+#         # --- per-trial correct() for all 3 pathways ---
+#         is_boundary = len(walk) == 1 and walk[0][2] == [None]
+#         if not is_boundary:
+#             trial_correct = np.mean(
+#                 [[np.mean(a) for a in step.correct()] for step in forward], axis=0
+#             )
+#             per_trial_correct.append({
+#                 "iteration": i,
+#                 "correct_p": float(trial_correct[0]),
+#                 "correct_g": float(trial_correct[1]),
+#                 "correct_gt": float(trial_correct[2]),
+#                 "logits_p": logits_p.tolist(),
+#                 "logits_g": logits_g.tolist(),
+#             })
+#
+#         # --- periodic representation + M snapshot, using a  dedicated
+#         # diagnostic walk (full location coverage) branched off the current
+#         # prev_iter, NOT the just-trained walk (which only visits 1-2
+#         # locations and would leave the rest as zero-filled placeholders) ---
+#         if save_representations is not None and (
+#             i % save_representations == 0 or is_last_walk
+#         ):
+#             diag_walk = generate_diagnostic_walk(env, multiplier=100)
+#             with torch.no_grad():
+#                 diag_forward = tem_model(diag_walk, prev_iter)
+#             g_snap, p_snap = analyse.rate_map(diag_forward, tem_model, [env])
+#             representation_snapshots.append({
+#                 "iteration": i,
+#                 "g": [freq_mat.tolist() for freq_mat in g_snap[0]],
+#                 "p": [freq_mat.tolist() for freq_mat in p_snap[0]],
+#                 "M_generative": forward[-1].M[0].numpy().tolist(),
+#             })
+#
+#         prev_iter = [forward[-1]]
+#
+#         if isinstance(plot_loss, np.int64):
+#             plot_loss = None
+#
+#         acc_p, acc_g, acc_gt = np.mean(
+#             [[np.mean(a) for a in step.correct()] for step in forward], axis=0
+#         )
+#         acc_p, acc_g, acc_gt = [a * 100 for a in (acc_p, acc_g, acc_gt)]
+#
+#         if i % log_interval == 0:
+#             logger.info("Finished backprop iter {:d} in {:.2f} seconds.".format(i, time.time() - start_time))
+#             if plot_loss is not None:
+#                 logger.info(
+#                     "Loss: {:.2f}. <p_g> {:.2f} <p_x> {:.2f} <x_gen> {:.2f} <x_g> {:.2f} <x_p> {:.2f} <g> {:.2f} <reg_g> {:.2f} <reg_p> {:.2f}".format(
+#                         loss.detach().numpy(), *plot_loss
+#                     )
+#                 )
+#             logger.info("Accuracy: <p> {:.2f}% <g> {:.2f}% <gt> {:.2f}%".format(acc_p, acc_g, acc_gt))
+#             logger.info(
+#                 "Parameters: <max_hebb> {:.2f} <eta> {:.2f} <lambda> {:.2f} <p2g_scale_offset> {:.2f}".format(
+#                     np.max(np.abs(prev_iter[0].M[0].numpy())),
+#                     tem_model.hyper["eta"], tem_model.hyper["lambda"], tem_model.hyper["p2g_scale_offset"],
+#                 )
+#             )
+#             logger.info("Weights:" + str([w for w in loss_weights.numpy()]))
+#             logger.info(" ")
+#             writer.add_scalar("Losses/Total", loss.detach().numpy(), i)
+#             if plot_loss is not None:
+#                 writer.add_scalar("Losses/p_g", plot_loss[0], i)
+#                 writer.add_scalar("Losses/p_x", plot_loss[1], i)
+#                 writer.add_scalar("Losses/x_gen", plot_loss[2], i)
+#                 writer.add_scalar("Losses/x_g", plot_loss[3], i)
+#                 writer.add_scalar("Losses/x_p", plot_loss[4], i)
+#                 writer.add_scalar("Losses/g", plot_loss[5], i)
+#                 writer.add_scalar("Losses/reg_g", plot_loss[6], i)
+#                 writer.add_scalar("Losses/reg_p", plot_loss[7], i)
+#                 writer.add_scalar("Accuracies/p", acc_p, i)
+#                 writer.add_scalar("Accuracies/g", acc_g, i)
+#                 writer.add_scalar("Accuracies/gt", acc_gt, i)
+#
+#     writer.close()
+#
+#     return tem_model, adam, params, i, logits_list, representation_snapshots, per_trial_correct, prev_iter
+#
+
+def learn_walks(walks, env, tem_model, adam, params, out_dir, i, run=1,
+                 save_representations=20, prev_iter=None,
+                 memory_iteration_offset=0, schedule_index=None):
+    """
+    memory_iteration_offset: subtracted from the schedule position when
+    computing eta/lambda (NOT lr/loss weights), so the memory-write schedule
+    can be independently reset at a design transition. Default 0.
+
+    schedule_index: optional list, same length as `walks`, giving each walk's
+    position on the parameter schedule. When a block is repeated, every copy
+    reuses the same positions, so eta/lambda/lr take the same values on a given
+    trial regardless of how many times its block is repeated. Without this the
+    schedules stretch with the number of repeats, which would change the
+    learning conditions inside the very block being manipulated. Defaults to
+    the walk's ordinal position, i.e. the original behaviour.
+
+    `i` remains the global step counter used for logging and for TensorBoard,
+    so it still increments once per weight update.
+    """
     visited = [[False for _ in range(env.n_locations)]]
-    prev_iter = None
 
     str_dir = str(out_dir) + "/"
     writer = SummaryWriter(str_dir)
     logger = utils.make_logger(str_dir)
     log_interval = 1
 
-    # Accumulate x_gt_logits in memory, write once at end
     logits_list = []
+    representation_snapshots = []
+    per_trial_correct = []
 
-    for walk in walks:
+    n_walks = len(walks)
+    for walk_i, walk in enumerate(walks):
         i += 1
+        sched = i if schedule_index is None else schedule_index[walk_i]
+        sched_memory = sched - memory_iteration_offset
+        is_last_walk = (walk_i == n_walks - 1)
 
-        # Temporarily used to check if 'walks' becomes None
-        # action = walk[-1][2][0]
-        # if action is None:
-        #    print(f"Boundary marker at iteration {i}, M will be reset")
-
-        # Get updated parameters for this backprop iteration
-        (
-            eta_new,
-            lambda_new,
-            p2g_scale_offset,
-            lr,
-            walk_length_center,
-            loss_weights,
-        ) = parameters.parameter_iteration(i, params)
-        # Get start time for function timing
+        (eta_new, lambda_new, p2g_scale_offset, lr, walk_length_center,
+         loss_weights) = parameter_iteration_decoupled(sched_memory, sched, params)
         start_time = time.time()
-        # Update eta and lambda
         tem_model.hyper["eta"] = eta_new
         tem_model.hyper["lambda"] = lambda_new
-        # Update scaling of offset for variance of inferred grounded position
         tem_model.hyper["p2g_scale_offset"] = p2g_scale_offset
-        # Update learning rate (the neater torch-way of doing this would be a scheduler, but this is quick and easy)
         for param_group in adam.param_groups:
             param_group["lr"] = lr
 
-        # Forward-pass this walk through the network
         forward = tem_model(walk, prev_iter)
 
-        # Accumulate loss from forward pass
         loss = torch.tensor(0.0, requires_grad=True)
-        # Collect all losses
         plot_loss = 0
         for step in forward:
-            # Make list of losses included in this step
             step_loss = []
-            # Only include loss for locations that have been visited before
             for env_i, env_visited in enumerate(visited):
                 if env_visited[step.g[env_i]["id"]]:
-                    step_loss.append(
-                        loss_weights * torch.stack([l[env_i] for l in step.L])
-                    )
+                    step_loss.append(loss_weights * torch.stack([l[env_i] for l in step.L]))
                 else:
                     env_visited[step.g[env_i]["id"]] = True
-            # Stack losses in this step along first dimension, then average across that dimension to get mean loss for this step
             step_loss = (
-                torch.tensor(0)
-                if not step_loss
+                torch.tensor(0) if not step_loss
                 else torch.mean(torch.stack(step_loss, dim=0), dim=0)
             )
-            # Save all separate components of loss for monitoring
             plot_loss = plot_loss + step_loss.detach().numpy()
-            # And sum all components, then add them to total loss of this step
             loss = loss + torch.sum(step_loss)
 
-        # Reset gradients
         adam.zero_grad()
-        # Do backward pass to calculate gradients with respect to total loss of this chunk
         loss.backward(retain_graph=True)
-        # Then do optimiser step to update parameters of model
         adam.step()
-        # Update the previous iteration for the next chunk with the final step of this chunk, removing all operation history
-        prev_iter = [forward[-1].detach()]
+
+        for step in forward:
+            step.detach()
+
+        last_step = forward[-1]
+        logits_gt = last_step.x_logits[2].detach().numpy()[0]
+        logits_list.append({"iteration": i, "logits": logits_gt.tolist()})
+
+        logits_p = last_step.x_logits[0].detach().numpy()[0]
+        logits_g = last_step.x_logits[1].detach().numpy()[0]
+
+        is_boundary = len(walk) == 1 and walk[0][2] == [None]
+        if not is_boundary:
+            trial_correct = np.mean(
+                [[np.mean(a) for a in step.correct()] for step in forward], axis=0
+            )
+            per_trial_correct.append({
+                "iteration": i,
+                "schedule_position": int(sched),
+                "correct_p": float(trial_correct[0]),
+                "correct_g": float(trial_correct[1]),
+                "correct_gt": float(trial_correct[2]),
+                "logits_p": logits_p.tolist(),
+                "logits_g": logits_g.tolist(),
+            })
+
+        if save_representations is not None and (
+            i % save_representations == 0 or is_last_walk
+        ):
+            diag_walk = generate_diagnostic_walk(env, multiplier=100)
+            with torch.no_grad():
+                diag_forward = tem_model(diag_walk, prev_iter)
+            g_snap, p_snap = analyse.rate_map(diag_forward, tem_model, [env])
+            representation_snapshots.append({
+                "iteration": i,
+                "g": [freq_mat.tolist() for freq_mat in g_snap[0]],
+                "p": [freq_mat.tolist() for freq_mat in p_snap[0]],
+                "M_generative": forward[-1].M[0].numpy().tolist(),
+            })
+
+        prev_iter = [forward[-1]]
 
         if isinstance(plot_loss, np.int64):
             plot_loss = None
-
-        # Accumulate x_gt_logits in memory (last step of each walk only)
-        last_step = forward[-1]
-        logits = last_step.x_logits[2].detach().numpy()[0]  # shape: (n_observations,)
-        logits_list.append({"iteration": i, "logits": logits.tolist()})
 
         acc_p, acc_g, acc_gt = np.mean(
             [[np.mean(a) for a in step.correct()] for step in forward], axis=0
@@ -359,28 +454,19 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i, run=1):
         acc_p, acc_g, acc_gt = [a * 100 for a in (acc_p, acc_g, acc_gt)]
 
         if i % log_interval == 0:
-            logger.info(
-                "Finished backprop iter {:d} in {:.2f} seconds.".format(
-                    i, time.time() - start_time
-                )
-            )
+            logger.info("Finished backprop iter {:d} (schedule {:d}) in {:.2f} seconds.".format(
+                i, int(sched), time.time() - start_time))
             if plot_loss is not None:
                 logger.info(
                     "Loss: {:.2f}. <p_g> {:.2f} <p_x> {:.2f} <x_gen> {:.2f} <x_g> {:.2f} <x_p> {:.2f} <g> {:.2f} <reg_g> {:.2f} <reg_p> {:.2f}".format(
                         loss.detach().numpy(), *plot_loss
                     )
                 )
-            logger.info(
-                "Accuracy: <p> {:.2f}% <g> {:.2f}% <gt> {:.2f}%".format(
-                    acc_p, acc_g, acc_gt
-                )
-            )
+            logger.info("Accuracy: <p> {:.2f}% <g> {:.2f}% <gt> {:.2f}%".format(acc_p, acc_g, acc_gt))
             logger.info(
                 "Parameters: <max_hebb> {:.2f} <eta> {:.2f} <lambda> {:.2f} <p2g_scale_offset> {:.2f}".format(
                     np.max(np.abs(prev_iter[0].M[0].numpy())),
-                    tem_model.hyper["eta"],
-                    tem_model.hyper["lambda"],
-                    tem_model.hyper["p2g_scale_offset"],
+                    tem_model.hyper["eta"], tem_model.hyper["lambda"], tem_model.hyper["p2g_scale_offset"],
                 )
             )
             logger.info("Weights:" + str([w for w in loss_weights.numpy()]))
@@ -401,24 +487,42 @@ def learn_walks(walks, env, tem_model, adam, params, out_dir, i, run=1):
 
     writer.close()
 
-    # Return logits_list for the caller to write once
-    return tem_model, adam, params, i, logits_list
+    return tem_model, adam, params, i, logits_list, representation_snapshots, per_trial_correct, prev_iter
 
 
-def learn_operators(env_files, design_files, out_dir, subject, run, override_file, walks_multiplier=10):
-    """Perform learning of multiple designs."""
+def learn_operators(env_files, design_files, out_dir, subject, run, override_file,
+                     walks_multiplier=1, reset_iteration_at_transfer=False,
+                     reset_perceptual_weights_at_transfer=True,
+                     reset_perceptual_optimizer_state=False,
+                     transition_init_scale=1.0, block_epochs=None,
+                     save_representations=20):
+    """
+    block_epochs: dict mapping block number to how many times that block's
+    trials are repeated, e.g. {2: 5, 4: 5}. Blocks not listed run once. The
+    trial order inside a repeated block is unchanged, and no boundary marker is
+    inserted between copies, matching how walks_multiplier repeats were handled
+    in study-24.
+
+    Repeating a block adds gradient updates without moving the parameter
+    schedules: each copy reuses the same schedule positions as the first, so
+    eta, lambda and the learning rate take the same value on a given trial
+    however many times its block repeats.
+    """
     designs = [pl.read_csv(file) for file in design_files]
     out_dir = Path(out_dir)
     params = parameters.parameters()
     with open(override_file) as f:
         params.update(json.load(f))
     tem_model = model.Model(params)
+    if transition_init_scale != 0.0:
+        reinit_transition_weights(tem_model, scale=transition_init_scale)
     adam = torch.optim.Adam(tem_model.parameters(), lr=params["lr_max"])
-    i = 0  # iteration counter
+    i = 0
+    schedule_base = 0
+
     for d, design in enumerate(designs):
         env = World(env_files[d], randomise_observations=True, shiny=None)
 
-        # Save node to observation index mapping for Luce choice rule fitting
         design_out_dir = out_dir / f"design-{d}"
         design_out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -426,41 +530,64 @@ def learn_operators(env_files, design_files, out_dir, subject, run, override_fil
             f"node_{loc['id'] + 1}": loc["observation"]
             for loc in env.locations
         }
-
         with open(design_out_dir / f"sub-{subject}_run-{run}_design-{d}_obs_mapping.json", "w") as f:
             json.dump(obs_mapping, f)
 
         actions = {"south": 1, "east": 2, "north": 3, "west": 4}
-        walks = walks_operators(design, env, actions)
+        walks, blocks = walks_operators(design, env, actions)
 
-        # Insert boundary markers between repeated copies (walks x multiplier boundaries)
-        if walks_multiplier > 1:
-            walks_with_boundaries = []
-            for rep in range(walks_multiplier):
-                if rep > 0:
-                    # Add boundary marker at the junction between repetitions
-                    # Use the target location of the last step of the previous repetition
-                    last_walk = walks[-1]
-                    last_step = last_walk[-1]
-                    boundary_step = [
-                        last_step[0], # same location
-                        last_step[1], # same observation
-                        [None], # None action triggers boundary reset (g_inf and x_inf only, M is preserved)
-                    ]
-                    walks_with_boundaries.append([boundary_step])
-                walks_with_boundaries.extend(walks)
-            walks = walks_with_boundaries
+        # Schedule position of each walk in the unrepeated sequence.
+        base_sched = [schedule_base + k + 1 for k in range(len(walks))]
+
+        if block_epochs:
+            expanded_walks, expanded_sched = [], []
+            k = 0
+            while k < len(walks):
+                blk = blocks[k]
+                j = k
+                while j < len(walks) and blocks[j] == blk:
+                    j += 1
+                segment = walks[k:j]
+                segment_sched = base_sched[k:j]
+                for _ in range(block_epochs.get(blk, 1)):
+                    expanded_walks.extend(segment)
+                    expanded_sched.extend(segment_sched)
+                k = j
+            walks, schedule_index = expanded_walks, expanded_sched
         else:
-            walks = walks * walks_multiplier
+            schedule_index = base_sched
 
-        # learn_walks now returns logits_list as well
-        tem_model, adam, params, i, logits_list = learn_walks(
-            walks, env, tem_model, adam, params, design_out_dir, i, run
+        if walks_multiplier > 1:
+            walks = walks * walks_multiplier
+            schedule_index = schedule_index * walks_multiplier
+
+        schedule_base += len(base_sched)
+
+        if reset_perceptual_weights_at_transfer and d == 1:
+            reset_perceptual_weights(tem_model, adam, reset_perceptual_optimizer_state)
+
+        memory_offset = schedule_base - len(base_sched) if (
+            reset_iteration_at_transfer and d == 1) else 0
+
+
+
+        tem_model, adam, params, i, logits_list, representation_snapshots, per_trial_correct, _ = learn_walks(
+            walks, env, tem_model, adam, params, design_out_dir, i, run,
+            save_representations=save_representations,
+            memory_iteration_offset=memory_offset,
+            schedule_index=schedule_index,
         )
 
-        # Write x_gt_logits once per run (much faster than per-walk)
         pl.DataFrame(logits_list).write_parquet(
             design_out_dir / f"sub-{subject}_run-{run}_design-{d}_x_gt_logits.parquet"
+        )
+
+        import pickle
+        with open(design_out_dir / f"sub-{subject}_run-{run}_design-{d}_representations.pkl", "wb") as f:
+            pickle.dump(representation_snapshots, f)
+
+        pl.DataFrame(per_trial_correct).write_parquet(
+            design_out_dir / f"sub-{subject}_run-{run}_design-{d}_per_trial.parquet"
         )
 
         torch.save(
@@ -474,26 +601,85 @@ def learn_operators(env_files, design_files, out_dir, subject, run, override_fil
     return tem_model
 
 
-def learn_mckenzie(design, node_labels, node_features, features, out_dir, run):
-    """Learn McKenzie design."""
+# This is the tentative function for testing whether repeated exposure cause the g-representation to gradually converge?
+def learn_operators_repeated(env_files, design_files, out_dir, subject, run, override_file,
+                               n_repeats=3, save_representations=20):
+    """
+    Repeated-environment variant: alternates training between Initial (design 0)
+    and Transfer (design 1) for n_repeats full passes each (Initial→Transfer→
+    Initial→Transfer...), instead of training each design once sequentially.
+
+    - obs_mapping is randomized ONCE per design (on first exposure) and reused
+      for every subsequent repetition, so representations stay comparable.
+    - M (and g_inf/x_inf) persist across every design switch and repetition —
+      prev_iter is threaded continuously through the whole sequence.
+    - tem_model/adam are created once and never recreated.
+    """
+    designs = [pl.read_csv(file) for file in design_files]
     out_dir = Path(out_dir)
     params = parameters.parameters()
+    with open(override_file) as f:
+        params.update(json.load(f))
     tem_model = model.Model(params)
     adam = torch.optim.Adam(tem_model.parameters(), lr=params["lr_max"])
-    walks = walks_mckenzie(design, node_labels, node_features, features, params["n_x"])
-    env = SimpleNamespace(n_locations=len(node_labels))
-    tem_model, adam, params, i, logits_list = learn_walks(
-        walks, env, tem_model, adam, params, out_dir, run
-    )
-    subject = "001"
-    torch.save(
-        tem_model.state_dict(),
-        out_dir / f"sub-{subject}_run-{run}_tem.pt",
-    )
-    torch.save(
-        tem_model.hyper,
-        out_dir / f"sub-{subject}_run-{run}_params.pt",
-    )
+    i = 0
+    prev_iter = None
+
+    actions = {"south": 1, "east": 2, "north": 3, "west": 4}
+
+    envs = [World(env_files[d], randomise_observations=True, shiny=None) for d in range(len(designs))]
+
+    for d, env in enumerate(envs):
+        design_out_dir = out_dir / f"design-{d}"
+        design_out_dir.mkdir(parents=True, exist_ok=True)
+        obs_mapping = {f"node_{loc['id'] + 1}": loc["observation"] for loc in env.locations}
+        with open(design_out_dir / f"sub-{subject}_run-{run}_design-{d}_obs_mapping.json", "w") as f:
+            json.dump(obs_mapping, f)
+
+    all_logits = {d: [] for d in range(len(designs))}
+    all_representations = {d: [] for d in range(len(designs))}
+    all_per_trial = {d: [] for d in range(len(designs))}
+
+    for rep in range(n_repeats):
+        for d, design in enumerate(designs):
+            env = envs[d]
+            design_out_dir = out_dir / f"design-{d}"
+            walks, _ = walks_operators(design, env, actions)
+
+            (tem_model, adam, params, i, logits_list, representation_snapshots,
+             per_trial_correct, prev_iter) = learn_walks(
+                walks, env, tem_model, adam, params, design_out_dir, i, run,
+                save_representations=save_representations,
+                prev_iter=prev_iter,
+            )
+
+            for entry in logits_list:
+                entry["repeat"] = rep
+            for entry in representation_snapshots:
+                entry["repeat"] = rep
+            for entry in per_trial_correct:
+                entry["repeat"] = rep
+
+            all_logits[d].extend(logits_list)
+            all_representations[d].extend(representation_snapshots)
+            all_per_trial[d].extend(per_trial_correct)
+
+    import pickle
+    for d in range(len(designs)):
+        design_out_dir = out_dir / f"design-{d}"
+        pl.DataFrame(all_logits[d]).write_parquet(
+            design_out_dir / f"sub-{subject}_run-{run}_design-{d}_x_gt_logits_repeated.parquet"
+        )
+        with open(design_out_dir / f"sub-{subject}_run-{run}_design-{d}_representations_repeated.pkl", "wb") as f:
+            pickle.dump(all_representations[d], f)
+        pl.DataFrame(all_per_trial[d]).write_parquet(
+            design_out_dir / f"sub-{subject}_run-{run}_design-{d}_per_trial_repeated.parquet"
+        )
+
+    torch.save(tem_model.state_dict(), out_dir / f"sub-{subject}_run-{run}_tem_final_repeated.pt")
+    torch.save(tem_model.hyper, out_dir / f"sub-{subject}_run-{run}_params_repeated.pt")
+
+    return tem_model
 
 
 def generate_env(spec, n_obs, observations):
@@ -628,11 +814,30 @@ class World:
                 for shiny_location in self.shiny["locations"]
             ]
 
+    # def observations_randomise(self):
+    #     # Run through every abstract location
+    #     for location in self.locations:
+    #         # Pick random observation from any of the observations
+    #         location["observation"] = np.random.randint(self.n_observations)
+    #     return self
+
     def observations_randomise(self):
-        # Run through every abstract location
-        for location in self.locations:
-            # Pick random observation from any of the observations
-            location["observation"] = np.random.randint(self.n_observations)
+        # Sample observations without replacement. The original TEM code used
+        # np.random.randint per location, which allows two locations to share
+        # the same observation. That is deliberate in original TEM above (sensory
+        # aliasing forces the model to rely on structure), but it does not
+        # match our task: the human design always assigns 6 distinct objects
+        # to the 6 nodes. With 6 draws from 45 with replacement, ~29% of runs
+        # contained at least one duplicated observation, which corrupts
+        # memory-based g inference for the aliased pair.
+        if self.n_locations <= self.n_observations:
+            chosen = np.random.choice(
+                self.n_observations, size=self.n_locations, replace=False
+            )
+        else:
+            chosen = np.random.randint(self.n_observations, size=self.n_locations)
+        for location, observation in zip(self.locations, chosen):
+            location["observation"] = int(observation)
         return self
 
     def policy_random(self):

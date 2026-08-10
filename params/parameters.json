@@ -10,8 +10,8 @@
     "loss_weights_reg_g": 0.01,
     "loss_weights_reg_p": 0.02,
 
-    "lambda": 0.99,
-    "eta": 0.5,
+    "lambda": 0.9999,
+    "eta": 0.2,
     "kappa": 0.8,
     "eta_it": 200,
     "lambda_it": 50,
